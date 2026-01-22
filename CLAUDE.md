@@ -1,6 +1,6 @@
-# boilerplate-nextjs-all-options
+# AFL Klant Portaal - Warehouse Safety Portal
 
-Full-stack Next.js 16 boilerplate with authentication (NextAuth v5), type-safe API (tRPC), database (Prisma + PostgreSQL), and comprehensive testing.
+Multi-tenant warehouse safety compliance portal with AI chatbot for Logistiekconcurrent.nl customers. Provides RAG-powered answers to warehouse compliance questions (RI&E, Arbobesluit, 2026 enforcement changes).
 
 ## Project Structure
 
@@ -9,27 +9,34 @@ src/
 ├── app/                      # Next.js App Router
 │   ├── api/
 │   │   ├── auth/[...nextauth]/ # NextAuth routes
+│   │   ├── chat/             # Chat API endpoint (streaming)
 │   │   └── trpc/[trpc]/      # tRPC endpoint
 │   ├── layout.tsx            # Root layout with providers
-│   ├── page.tsx              # Homepage
-│   └── globals.css           # Tailwind CSS
+│   └── page.tsx              # Homepage
+├── components/
+│   ├── chat/                 # Chat interface components
+│   └── ui/                   # shadcn/ui components
 ├── lib/
 │   ├── auth.ts               # NextAuth configuration
 │   ├── db.ts                 # Prisma client singleton
-│   └── utils.ts              # Utility functions (cn)
+│   ├── utils.ts              # Utility functions (cn)
+│   ├── ai/                   # AI/LLM integration (RAG, prompts)
+│   ├── scraper/              # Web scraping (Firecrawl, ingestion)
+│   └── vector/               # pgvector integration
 ├── trpc/
 │   ├── init.ts               # tRPC context & router setup
-│   ├── routers/_app.ts       # API procedures
+│   ├── routers/              # API routers (admin, chat, documents)
 │   ├── client.tsx            # Client provider
 │   ├── server.tsx            # Server-side caller
 │   └── query-client.ts       # React Query config
 ├── types/                    # TypeScript type definitions
 ├── env.ts                    # Environment validation (Zod)
-└── generated/                # Prisma generated client
+└── generated/                # Prisma generated client (DO NOT EDIT)
 
 prisma/
-└── schema.prisma             # Database schema
+└── schema.prisma             # Database schema (User, Document, Conversation, Message)
 
+scripts/                      # Utility scripts (data ingestion)
 __tests__/                    # Unit tests (Vitest)
 tests/                        # E2E tests (Playwright)
 ```
