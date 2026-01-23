@@ -1,9 +1,9 @@
-import { MDocument } from "@mastra/rag";
-import { embedMany } from "ai";
-import { embeddingModel } from "@/lib/ai";
-import { db } from "@/lib/db";
-import { storeChunkEmbedding, ensurePgvectorExtension } from "@/lib/vector/pgvector";
-import { scrapeUrl, type ScrapeResult } from "./firecrawl";
+import { MDocument } from '@mastra/rag';
+import { embedMany } from 'ai';
+import { embeddingModel } from '@/lib/ai';
+import { db } from '@/lib/db';
+import { storeChunkEmbedding, ensurePgvectorExtension } from '@/lib/vector/pgvector';
+import { scrapeUrl, type ScrapeResult } from './firecrawl';
 
 export interface IngestResult {
   documentId: string;
@@ -29,7 +29,7 @@ export async function ingestContent(content: ScrapeResult): Promise<IngestResult
 
   // Chunk the document
   const chunks = await doc.chunk({
-    strategy: "markdown",
+    strategy: 'markdown',
     maxSize: 512,
     overlap: 50,
   });
@@ -70,7 +70,9 @@ export async function ingestContent(content: ScrapeResult): Promise<IngestResult
     });
 
     // Store embeddings
-    await Promise.all(embeddings.map((embedding, idx) => storeChunkEmbedding(batchRecords[idx].id, embedding)));
+    await Promise.all(
+      embeddings.map((embedding, idx) => storeChunkEmbedding(batchRecords[idx].id, embedding))
+    );
 
     embeddingsGenerated += embeddings.length;
   }
@@ -114,6 +116,6 @@ export async function reprocessDocument(documentId: string): Promise<IngestResul
     title: document.title,
     content: document.content,
     markdown: document.content,
-    sourceUrl: document.sourceUrl || "",
+    sourceUrl: document.sourceUrl || '',
   });
 }

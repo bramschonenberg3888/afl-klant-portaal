@@ -4,20 +4,20 @@ import {
   createUIMessageStreamResponse,
   streamText,
   type UIMessage,
-} from "ai";
-import { chatModel } from "@/lib/ai";
-import { getRAGContext } from "@/lib/ai/rag";
-import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+} from 'ai';
+import { chatModel } from '@/lib/ai';
+import { getRAGContext } from '@/lib/ai/rag';
+import { db } from '@/lib/db';
+import { auth } from '@/lib/auth';
 
 export const maxDuration = 30;
 
 function getTextFromMessage(message: UIMessage): string {
-  if (!message.parts) return "";
+  if (!message.parts) return '';
   return message.parts
-    .filter((part): part is { type: "text"; text: string } => part.type === "text")
+    .filter((part): part is { type: 'text'; text: string } => part.type === 'text')
     .map((part) => part.text)
-    .join(" ");
+    .join(' ');
 }
 
 export async function POST(req: Request) {
@@ -27,9 +27,9 @@ export async function POST(req: Request) {
     conversationId?: string;
   };
 
-  const lastUserMessage = messages.filter((m) => m.role === "user").pop();
+  const lastUserMessage = messages.filter((m) => m.role === 'user').pop();
   if (!lastUserMessage) {
-    return new Response("No user message found", { status: 400 });
+    return new Response('No user message found', { status: 400 });
   }
 
   // Extract text content from the last user message
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   // Get RAG context for the user's question
   const ragContext = await getRAGContext(userContent, {
     topK: 5,
-    language: "nl",
+    language: 'nl',
   });
 
   // Store conversation if user is authenticated
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     await db.message.create({
       data: {
         conversationId: activeConversationId,
-        role: "user",
+        role: 'user',
         content: userContent,
       },
     });
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       if (ragContext.sources.length > 0) {
         for (const source of ragContext.sources) {
           writer.write({
-            type: "source-url",
+            type: 'source-url',
             sourceId: source,
             url: source,
             title: source,
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
             await db.message.create({
               data: {
                 conversationId: activeConversationId,
-                role: "assistant",
+                role: 'assistant',
                 content: text,
                 sources: ragContext.sources.length > 0 ? JSON.stringify(ragContext.sources) : null,
               },
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
   return createUIMessageStreamResponse({
     stream,
     headers: {
-      "X-Conversation-Id": activeConversationId || "",
+      'X-Conversation-Id': activeConversationId || '',
     },
   });
 }

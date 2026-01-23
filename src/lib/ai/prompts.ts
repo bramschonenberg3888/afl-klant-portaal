@@ -24,9 +24,12 @@ Guidelines:
 
 If no relevant context is provided, indicate that you haven't found specific information and offer to help answer the question in another way.`;
 
-export function buildRAGPrompt(context: string, language: "nl" | "en" = "nl"): string {
-  const systemPrompt = language === "nl" ? SYSTEM_PROMPT_NL : SYSTEM_PROMPT_EN;
-  const contextLabel = language === "nl" ? "Relevante context uit de kennisbank" : "Relevant context from the knowledge base";
+export function buildRAGPrompt(context: string, language: 'nl' | 'en' = 'nl'): string {
+  const systemPrompt = language === 'nl' ? SYSTEM_PROMPT_NL : SYSTEM_PROMPT_EN;
+  const contextLabel =
+    language === 'nl'
+      ? 'Relevante context uit de kennisbank'
+      : 'Relevant context from the knowledge base';
 
   return `${systemPrompt}
 

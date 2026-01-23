@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { HelpCircle } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { HelpCircle } from 'lucide-react';
 
 interface RelatedQuestionsProps {
   questions: string[];
@@ -20,7 +20,13 @@ export function RelatedQuestions({ questions, onSelect }: RelatedQuestionsProps)
       </div>
       <div className="flex flex-wrap gap-2">
         {questions.map((question, index) => (
-          <Button key={index} variant="outline" size="sm" className="text-left h-auto py-2" onClick={() => onSelect(question)}>
+          <Button
+            key={index}
+            variant="outline"
+            size="sm"
+            className="text-left h-auto py-2"
+            onClick={() => onSelect(question)}
+          >
             {question}
           </Button>
         ))}
@@ -30,8 +36,8 @@ export function RelatedQuestions({ questions, onSelect }: RelatedQuestionsProps)
 }
 
 export const SUGGESTED_QUESTIONS = [
-  "Wat zijn de belangrijkste veiligheidsvoorschriften voor een magazijn?",
-  "Hoe moet ik omgaan met gevaarlijke stoffen?",
-  "Welke persoonlijke beschermingsmiddelen zijn verplicht?",
-  "Wat zijn de regels voor het werken op hoogte?",
+  'Wat zijn de belangrijkste veiligheidsvoorschriften voor een magazijn?',
+  'Hoe moet ik omgaan met gevaarlijke stoffen?',
+  'Welke persoonlijke beschermingsmiddelen zijn verplicht?',
+  'Wat zijn de regels voor het werken op hoogte?',
 ];

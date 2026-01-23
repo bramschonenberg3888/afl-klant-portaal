@@ -1,7 +1,7 @@
-import { createTRPCRouter, baseProcedure } from "../init";
-import { z } from "zod";
-import { db } from "@/lib/db";
-import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, baseProcedure } from '../init';
+import { z } from 'zod';
+import { db } from '@/lib/db';
+import { TRPCError } from '@trpc/server';
 
 export const documentsRouter = createTRPCRouter({
   list: baseProcedure
@@ -20,7 +20,7 @@ export const documentsRouter = createTRPCRouter({
       const documents = await db.document.findMany({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
         select: {
           id: true,
           title: true,
@@ -55,13 +55,13 @@ export const documentsRouter = createTRPCRouter({
             chunkIndex: true,
             content: true,
           },
-          orderBy: { chunkIndex: "asc" },
+          orderBy: { chunkIndex: 'asc' },
         },
       },
     });
 
     if (!document) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Document not found" });
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
     }
 
     return document;
@@ -73,7 +73,7 @@ export const documentsRouter = createTRPCRouter({
     });
 
     if (!document) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Document not found" });
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
     }
 
     await db.document.delete({
@@ -84,7 +84,10 @@ export const documentsRouter = createTRPCRouter({
   }),
 
   getStats: baseProcedure.query(async () => {
-    const [documentCount, chunkCount] = await Promise.all([db.document.count(), db.documentChunk.count()]);
+    const [documentCount, chunkCount] = await Promise.all([
+      db.document.count(),
+      db.documentChunk.count(),
+    ]);
 
     return {
       documentCount,

@@ -1,6 +1,6 @@
-import { initTRPC } from "@trpc/server";
-import { cache } from "react";
-import { auth } from "@/lib/auth";
+import { initTRPC } from '@trpc/server';
+import { cache } from 'react';
+import { auth } from '@/lib/auth';
 
 /**
  * Create tRPC context

@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
 export interface SimilarChunk {
   id: string;
@@ -9,9 +9,12 @@ export interface SimilarChunk {
   similarity: number;
 }
 
-export async function findSimilarChunks(embedding: number[], topK: number = 5): Promise<SimilarChunk[]> {
+export async function findSimilarChunks(
+  embedding: number[],
+  topK: number = 5
+): Promise<SimilarChunk[]> {
   // Format embedding as PostgreSQL vector literal
-  const vectorLiteral = `[${embedding.join(",")}]`;
+  const vectorLiteral = `[${embedding.join(',')}]`;
 
   // Use raw SQL for pgvector similarity search
   // Cosine similarity: 1 - (embedding <=> query_embedding)
@@ -54,7 +57,7 @@ export async function findSimilarChunks(embedding: number[], topK: number = 5): 
 }
 
 export async function storeChunkEmbedding(chunkId: string, embedding: number[]): Promise<void> {
-  const vectorLiteral = `[${embedding.join(",")}]`;
+  const vectorLiteral = `[${embedding.join(',')}]`;
 
   await db.$executeRawUnsafe(
     `

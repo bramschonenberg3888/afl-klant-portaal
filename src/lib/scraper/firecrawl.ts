@@ -1,8 +1,8 @@
-import Firecrawl from "@mendable/firecrawl-js";
-import * as cheerio from "cheerio";
-import { Readability } from "@mozilla/readability";
-import { JSDOM } from "jsdom";
-import { env } from "@/env";
+import Firecrawl from '@mendable/firecrawl-js';
+import * as cheerio from 'cheerio';
+import { Readability } from '@mozilla/readability';
+import { JSDOM } from 'jsdom';
+import { env } from '@/env';
 
 export interface ScrapeResult {
   title: string;
@@ -17,9 +17,9 @@ export async function scrapeUrl(url: string): Promise<ScrapeResult> {
   try {
     // Try Firecrawl first
     const result = await firecrawl.scrape(url, {
-      formats: ["markdown"],
+      formats: ['markdown'],
       onlyMainContent: true,
-      excludeTags: ["script", "style", "noscript", "img", "nav", "footer", "header"],
+      excludeTags: ['script', 'style', 'noscript', 'img', 'nav', 'footer', 'header'],
     });
 
     if (result.markdown) {
@@ -42,7 +42,7 @@ export async function scrapeUrl(url: string): Promise<ScrapeResult> {
 async function fallbackScrape(url: string): Promise<ScrapeResult> {
   const response = await fetch(url, {
     headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; SafetyPortalBot/1.0)",
+      'User-Agent': 'Mozilla/5.0 (compatible; SafetyPortalBot/1.0)',
     },
   });
 
@@ -60,8 +60,8 @@ async function fallbackScrape(url: string): Promise<ScrapeResult> {
   if (article) {
     return {
       title: article.title || extractTitleFromUrl(url),
-      content: article.textContent || "",
-      markdown: article.content || article.textContent || "",
+      content: article.textContent || '',
+      markdown: article.content || article.textContent || '',
       sourceUrl: url,
     };
   }
@@ -70,10 +70,10 @@ async function fallbackScrape(url: string): Promise<ScrapeResult> {
   const $ = cheerio.load(html);
 
   // Remove unwanted elements
-  $("script, style, nav, footer, header, aside, .ad, .advertisement").remove();
+  $('script, style, nav, footer, header, aside, .ad, .advertisement').remove();
 
-  const title = $("title").text() || $("h1").first().text() || extractTitleFromUrl(url);
-  const content = $("main, article, .content, #content, body").first().text().trim();
+  const title = $('title').text() || $('h1').first().text() || extractTitleFromUrl(url);
+  const content = $('main, article, .content, #content, body').first().text().trim();
 
   return {
     title,
@@ -86,13 +86,13 @@ async function fallbackScrape(url: string): Promise<ScrapeResult> {
 function extractTitleFromUrl(url: string): string {
   try {
     const urlObj = new URL(url);
-    const pathParts = urlObj.pathname.split("/").filter(Boolean);
+    const pathParts = urlObj.pathname.split('/').filter(Boolean);
     if (pathParts.length > 0) {
-      return pathParts[pathParts.length - 1].replace(/-/g, " ").replace(/\.\w+$/, "");
+      return pathParts[pathParts.length - 1].replace(/-/g, ' ').replace(/\.\w+$/, '');
     }
     return urlObj.hostname;
   } catch {
-    return "Untitled Document";
+    return 'Untitled Document';
   }
 }
 

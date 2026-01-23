@@ -1,7 +1,7 @@
-import { createTRPCRouter, baseProcedure } from "../init";
-import { z } from "zod";
-import { db } from "@/lib/db";
-import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, baseProcedure } from '../init';
+import { z } from 'zod';
+import { db } from '@/lib/db';
+import { TRPCError } from '@trpc/server';
 
 export const chatRouter = createTRPCRouter({
   getConversations: baseProcedure.query(async ({ ctx }) => {
@@ -11,7 +11,7 @@ export const chatRouter = createTRPCRouter({
 
     return db.conversation.findMany({
       where: { userId: ctx.userId },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { updatedAt: 'desc' },
       select: {
         id: true,
         title: true,
@@ -21,49 +21,53 @@ export const chatRouter = createTRPCRouter({
     });
   }),
 
-  getConversation: baseProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
-    const conversation = await db.conversation.findUnique({
-      where: { id: input.id },
-      include: {
-        messages: {
-          orderBy: { createdAt: "asc" },
+  getConversation: baseProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const conversation = await db.conversation.findUnique({
+        where: { id: input.id },
+        include: {
+          messages: {
+            orderBy: { createdAt: 'asc' },
+          },
         },
-      },
-    });
+      });
 
-    if (!conversation) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Conversation not found" });
-    }
+      if (!conversation) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Conversation not found' });
+      }
 
-    // Check ownership if user is authenticated
-    if (ctx.userId && conversation.userId && conversation.userId !== ctx.userId) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Not authorized" });
-    }
+      // Check ownership if user is authenticated
+      if (ctx.userId && conversation.userId && conversation.userId !== ctx.userId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized' });
+      }
 
-    return conversation;
-  }),
+      return conversation;
+    }),
 
-  deleteConversation: baseProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
-    if (!ctx.userId) {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "Must be logged in" });
-    }
+  deleteConversation: baseProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.userId) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
+      }
 
-    const conversation = await db.conversation.findUnique({
-      where: { id: input.id },
-    });
+      const conversation = await db.conversation.findUnique({
+        where: { id: input.id },
+      });
 
-    if (!conversation) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Conversation not found" });
-    }
+      if (!conversation) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Conversation not found' });
+      }
 
-    if (conversation.userId !== ctx.userId) {
-      throw new TRPCError({ code: "FORBIDDEN", message: "Not authorized" });
-    }
+      if (conversation.userId !== ctx.userId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized' });
+      }
 
-    await db.conversation.delete({
-      where: { id: input.id },
-    });
+      await db.conversation.delete({
+        where: { id: input.id },
+      });
 
-    return { success: true };
-  }),
+      return { success: true };
+    }),
 });

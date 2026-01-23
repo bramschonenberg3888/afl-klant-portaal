@@ -1,7 +1,7 @@
-import { embed } from "ai";
-import { embeddingModel } from "./index";
-import { findSimilarChunks, type SimilarChunk } from "@/lib/vector/pgvector";
-import { buildRAGPrompt } from "./prompts";
+import { embed } from 'ai';
+import { embeddingModel } from './index';
+import { findSimilarChunks, type SimilarChunk } from '@/lib/vector/pgvector';
+import { buildRAGPrompt } from './prompts';
 
 export interface RAGContext {
   systemPrompt: string;
@@ -13,10 +13,10 @@ export async function getRAGContext(
   query: string,
   options: {
     topK?: number;
-    language?: "nl" | "en";
+    language?: 'nl' | 'en';
   } = {}
 ): Promise<RAGContext> {
-  const { topK = 5, language = "nl" } = options;
+  const { topK = 5, language = 'nl' } = options;
 
   // Generate embedding for the query
   const { embedding } = await embed({
@@ -29,11 +29,13 @@ export async function getRAGContext(
 
   // Build context from chunks
   const contextParts = chunks.map((chunk, index) => {
-    const sourceLabel = chunk.sourceUrl ? `[Bron: ${chunk.sourceUrl}]` : `[Document: ${chunk.documentTitle}]`;
+    const sourceLabel = chunk.sourceUrl
+      ? `[Bron: ${chunk.sourceUrl}]`
+      : `[Document: ${chunk.documentTitle}]`;
     return `${index + 1}. ${sourceLabel}\n${chunk.content}`;
   });
 
-  const context = contextParts.join("\n\n");
+  const context = contextParts.join('\n\n');
   const systemPrompt = buildRAGPrompt(context, language);
 
   // Extract unique source URLs

@@ -1,34 +1,37 @@
-import Firecrawl from "@mendable/firecrawl-js";
-import { MDocument } from "@mastra/rag";
-import { embedMany } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
-import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import "dotenv/config";
+import Firecrawl from '@mendable/firecrawl-js';
+import { MDocument } from '@mastra/rag';
+import { embedMany } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import 'dotenv/config';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 const firecrawl = new Firecrawl({ apiKey: process.env.FIRECRAWL_API_KEY! });
 const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-const embeddingModel = openai.embedding("text-embedding-3-small");
+const embeddingModel = openai.embedding('text-embedding-3-small');
 
 async function main() {
-  console.log("Starting Evofenedex crawl...");
+  console.log('Starting Evofenedex crawl...');
 
   // Crawl all pages under the warehouse regulations section
-  const crawlResult = await firecrawl.crawl("https://www.evofenedex.nl/kennis/magazijn/wet-en-regelgeving", {
-    limit: 50,
-    includePaths: ["/kennis/magazijn/wet-en-regelgeving/*"],
-    scrapeOptions: {
-      formats: ["markdown"],
-      onlyMainContent: true,
-    },
-  });
+  const crawlResult = await firecrawl.crawl(
+    'https://www.evofenedex.nl/kennis/magazijn/wet-en-regelgeving',
+    {
+      limit: 50,
+      includePaths: ['/kennis/magazijn/wet-en-regelgeving/*'],
+      scrapeOptions: {
+        formats: ['markdown'],
+        onlyMainContent: true,
+      },
+    }
+  );
 
   if (!crawlResult.data || crawlResult.data.length === 0) {
-    console.error("Crawl returned no data:", crawlResult);
+    console.error('Crawl returned no data:', crawlResult);
     return;
   }
 
@@ -40,7 +43,7 @@ async function main() {
       continue;
     }
 
-    const sourceUrl = page.metadata?.sourceURL || "unknown";
+    const sourceUrl = page.metadata?.sourceURL || 'unknown';
     const title = page.metadata?.title || sourceUrl;
 
     console.log(`Processing: ${title}`);
@@ -58,7 +61,7 @@ async function main() {
     // Create document
     const doc = MDocument.fromMarkdown(page.markdown);
     const chunks = await doc.chunk({
-      strategy: "markdown",
+      strategy: 'markdown',
       maxSize: 512,
       overlap: 50,
     });
@@ -94,7 +97,7 @@ async function main() {
       });
 
       // Store embedding using raw SQL
-      const vectorLiteral = `[${embeddings[i].join(",")}]`;
+      const vectorLiteral = `[${embeddings[i].join(',')}]`;
       await prisma.$executeRawUnsafe(
         `UPDATE "DocumentChunk" SET embedding = $1::vector WHERE id = $2`,
         vectorLiteral,
@@ -105,7 +108,7 @@ async function main() {
     console.log(`  Saved to database`);
   }
 
-  console.log("Done!");
+  console.log('Done!');
 }
 
 main()
