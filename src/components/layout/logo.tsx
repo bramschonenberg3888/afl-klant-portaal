@@ -3,52 +3,25 @@ import { cn } from '@/lib/utils';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
-  showText?: boolean;
   className?: string;
 }
 
-export function Logo({ size = 'md', showText = true, className }: LogoProps) {
+export function Logo({ size = 'md', className }: LogoProps) {
   const sizes = {
-    sm: { width: 24, height: 24 },
-    md: { width: 40, height: 40 },
-    lg: { width: 56, height: 56 },
+    sm: { width: 95, height: 32, className: 'h-8' },
+    md: { width: 142, height: 48, className: 'h-12' },
+    lg: { width: 189, height: 64, className: 'h-16' },
   };
 
-  const { width, height } = sizes[size];
+  const { width, height, className: sizeClass } = sizes[size];
 
   return (
-    <div className={cn('flex items-center gap-3', className)}>
-      <Image
-        src="/logo.png"
-        alt="Logistiekconcurrent"
-        width={width}
-        height={height}
-        className="shrink-0"
-      />
-      {showText && (
-        <div className="flex flex-col">
-          <span
-            className={cn(
-              'font-semibold leading-tight',
-              size === 'sm' && 'text-sm',
-              size === 'md' && 'text-base',
-              size === 'lg' && 'text-lg'
-            )}
-          >
-            Logistiekconcurrent
-          </span>
-          <span
-            className={cn(
-              'leading-tight opacity-70',
-              size === 'sm' && 'text-xs',
-              size === 'md' && 'text-sm',
-              size === 'lg' && 'text-sm'
-            )}
-          >
-            Veiligheidsportaal
-          </span>
-        </div>
-      )}
-    </div>
+    <Image
+      src="/logo-lc.svg"
+      alt="Logistiekconcurrent"
+      width={width}
+      height={height}
+      className={cn(sizeClass, 'w-auto', className)}
+    />
   );
 }

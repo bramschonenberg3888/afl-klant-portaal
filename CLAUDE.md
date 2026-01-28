@@ -22,7 +22,8 @@ src/
 │   ├── admin/                # Admin panel (usage-stats, users-table)
 │   ├── layout/               # Layout components (sidebar, header, nav)
 │   ├── auth/                 # Auth components (login-form)
-│   └── settings/             # Settings components (profile-form)
+│   ├── settings/             # Settings components (profile-form)
+│   └── quick-scan/           # Quick-scan compliance checker
 ├── lib/
 │   ├── auth.ts               # NextAuth configuration
 │   ├── db.ts                 # Prisma client singleton

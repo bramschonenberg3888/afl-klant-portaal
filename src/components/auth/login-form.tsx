@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Logo } from '@/components/layout/logo';
 import { Loader2 } from 'lucide-react';
 
 export function LoginForm() {
@@ -40,9 +39,6 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-4">
-        <div className="flex justify-center lg:hidden">
-          <Logo size="lg" />
-        </div>
         <div className="space-y-1 text-center">
           <CardTitle className="text-2xl">Inloggen</CardTitle>
           <CardDescription>

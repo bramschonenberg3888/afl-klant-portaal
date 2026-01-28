@@ -4,13 +4,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-svh">
       {/* Left side - Brand panel */}
-      <div className="hidden w-1/2 flex-col justify-between bg-[#0052CC] p-12 text-white lg:flex">
+      <div className="hidden w-1/2 flex-col items-start justify-between bg-[#0052CC] p-12 text-white lg:flex">
         <Image
-          src="/logo.png"
+          src="/logo-lc.svg"
           alt="Logistiekconcurrent"
-          width={267}
-          height={96}
-          className="h-20 w-auto"
+          width={189}
+          height={64}
+          className="h-16 w-auto"
           priority
         />
         <div className="space-y-6">
