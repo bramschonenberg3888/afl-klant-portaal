@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { HelpCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface RelatedQuestionsProps {
   questions: string[];
@@ -13,24 +12,18 @@ export function RelatedQuestions({ questions, onSelect }: RelatedQuestionsProps)
   if (questions.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-2 p-4 border-t">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <HelpCircle className="h-4 w-4" />
-        <span>Gerelateerde vragen</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {questions.map((question, index) => (
-          <Button
-            key={index}
-            variant="outline"
-            size="sm"
-            className="text-left h-auto py-2"
-            onClick={() => onSelect(question)}
-          >
-            {question}
-          </Button>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
+      {questions.map((question, index) => (
+        <button
+          key={index}
+          type="button"
+          className="flex items-start gap-3 rounded-lg border p-4 text-left text-sm transition-colors hover:bg-muted cursor-pointer"
+          onClick={() => onSelect(question)}
+        >
+          <span className="flex-1">{question}</span>
+          <ArrowRight className="h-4 w-4 shrink-0 mt-0.5 text-muted-foreground" />
+        </button>
+      ))}
     </div>
   );
 }
