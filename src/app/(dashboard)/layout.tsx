@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { SessionProvider } from 'next-auth/react';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/layout/app-sidebar';
 import { DashboardHeader } from '@/components/layout/dashboard-header';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,13 +12,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <SessionProvider session={session}>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6">{children}</main>
-        </SidebarInset>
-      </SidebarProvider>
+      <div className="flex min-h-svh flex-col">
+        <DashboardHeader />
+        <main className="flex-1 overflow-auto p-6">{children}</main>
+      </div>
     </SessionProvider>
   );
 }

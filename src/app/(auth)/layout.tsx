@@ -15,12 +15,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         />
         <div className="space-y-6">
           <h1 className="text-5xl font-bold leading-tight">
-            Magazijn
+            Magazijn op Maat
             <br />
-            Veiligheidsportaal
+            Klantportaal
           </h1>
           <p className="text-xl text-white/80">
-            Alles over magazijnveiligheid, RI&E en Arbobesluit compliance op een plek.
+            Alles over een efficiënt en veilig magazijn op één plek
           </p>
         </div>
         <p className="text-sm text-white/60">
@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Right side - Auth form */}
-      <div className="flex w-full items-center justify-center bg-gradient-to-br from-muted/40 to-primary/5 p-6 lg:w-1/2">
+      <div className="flex w-full items-center justify-center bg-white p-6 lg:w-1/2">
         {children}
       </div>
     </div>
