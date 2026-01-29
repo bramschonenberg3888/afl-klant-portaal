@@ -11,7 +11,8 @@ export interface SimilarChunk {
 
 export async function findSimilarChunks(
   embedding: number[],
-  topK: number = 5
+  topK: number = 5,
+  minSimilarity: number = 0.3
 ): Promise<SimilarChunk[]> {
   // Format embedding as PostgreSQL vector literal
   const vectorLiteral = `[${embedding.join(',')}]`;
@@ -39,11 +40,13 @@ export async function findSimilarChunks(
     FROM "DocumentChunk" dc
     JOIN "Document" d ON dc."documentId" = d.id
     WHERE dc.embedding IS NOT NULL
+      AND (1 - (dc.embedding <=> $1::vector)) >= $3
     ORDER BY dc.embedding <=> $1::vector
     LIMIT $2
     `,
     vectorLiteral,
-    topK
+    topK,
+    minSimilarity
   );
 
   return results.map((row) => ({

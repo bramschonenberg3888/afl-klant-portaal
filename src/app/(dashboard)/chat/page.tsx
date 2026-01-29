@@ -1,9 +1,11 @@
-import { ChatInterface } from '@/components/chat/chat-interface';
+import { ChatLayout } from '@/components/chat/chat-layout';
 
-export default function ChatPage() {
-  return (
-    <div className="h-[calc(100vh-8rem)]">
-      <ChatInterface />
-    </div>
-  );
+export default async function ChatPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>;
+}) {
+  const params = await searchParams;
+
+  return <ChatLayout initialConversationId={params.id} />;
 }

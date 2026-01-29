@@ -1,7 +1,8 @@
 import { embed } from 'ai';
 import { embeddingModel } from './index';
 import { findSimilarChunks, type SimilarChunk } from '@/lib/vector/pgvector';
-import { buildRAGPrompt } from './prompts';
+import { buildRAGPrompt, buildNoResultsPrompt } from './prompts';
+import { withRetry } from '@/lib/utils';
 
 export interface RAGContext {
   systemPrompt: string;
@@ -14,18 +15,30 @@ export async function getRAGContext(
   options: {
     topK?: number;
     language?: 'nl' | 'en';
+    minSimilarity?: number;
   } = {}
 ): Promise<RAGContext> {
-  const { topK = 5, language = 'nl' } = options;
+  const { topK = 5, language = 'nl', minSimilarity = 0.3 } = options;
 
-  // Generate embedding for the query
-  const { embedding } = await embed({
-    model: embeddingModel,
-    value: query,
-  });
+  // Generate embedding for the query with retry for cold-start failures
+  const { embedding } = await withRetry(() =>
+    embed({
+      model: embeddingModel,
+      value: query,
+    })
+  );
 
-  // Find similar chunks using pgvector
-  const chunks = await findSimilarChunks(embedding, topK);
+  // Find similar chunks using pgvector with minimum similarity threshold
+  const chunks = await findSimilarChunks(embedding, topK, minSimilarity);
+
+  // Handle zero-result case
+  if (chunks.length === 0) {
+    return {
+      systemPrompt: buildNoResultsPrompt(language),
+      chunks: [],
+      sources: [],
+    };
+  }
 
   // Build context from chunks
   const contextParts = chunks.map((chunk, index) => {
