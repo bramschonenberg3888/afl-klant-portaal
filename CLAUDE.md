@@ -17,10 +17,10 @@ src/
 │   └── globals.css           # Global styles
 ├── components/
 │   ├── ui/                   # shadcn/ui base components
-│   ├── chat/                 # Chat interface (chat-interface, message, related-questions)
+│   ├── chat/                 # Chat (layout, interface, conversation-list, message, related-questions)
 │   ├── dashboard/            # Dashboard widgets (stats, recent-chats)
 │   ├── admin/                # Admin panel (usage-stats, users-table)
-│   ├── layout/               # Layout components (sidebar, header, nav)
+│   ├── layout/               # Layout components (dashboard-header, logo)
 │   ├── auth/                 # Auth components (login-form)
 │   ├── settings/             # Settings components (profile-form)
 │   └── quick-scan/           # Quick-scan compliance checker
@@ -36,7 +36,7 @@ src/
 │   ├── routers/              # API routers (admin, chat, documents)
 │   ├── client.tsx            # Client provider
 │   └── server.tsx            # Server-side caller
-├── hooks/                    # Custom React hooks
+├── hooks/                    # Custom React hooks (use-mobile, use-scroll-to-bottom)
 ├── types/                    # TypeScript type definitions
 ├── env.ts                    # Environment validation (Zod)
 └── generated/                # Prisma generated client (DO NOT EDIT)
