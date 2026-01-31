@@ -1,7 +1,6 @@
 import Firecrawl from '@mendable/firecrawl-js';
 import * as cheerio from 'cheerio';
 import { Readability } from '@mozilla/readability';
-import { JSDOM } from 'jsdom';
 import { env } from '@/env';
 
 export interface ScrapeResult {
@@ -52,7 +51,8 @@ async function fallbackScrape(url: string): Promise<ScrapeResult> {
 
   const html = await response.text();
 
-  // Use Readability to extract main content
+  // Use Readability to extract main content (dynamic import to avoid bundling issues)
+  const { JSDOM } = await import('jsdom');
   const dom = new JSDOM(html, { url });
   const reader = new Readability(dom.window.document);
   const article = reader.parse();
