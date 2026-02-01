@@ -103,7 +103,8 @@ export async function POST(req: Request) {
                   conversationId: activeConversationId,
                   role: 'assistant',
                   content: text,
-                  sources: ragContext.sources.length > 0 ? JSON.stringify(ragContext.sources) : null,
+                  sources:
+                    ragContext.sources.length > 0 ? JSON.stringify(ragContext.sources) : null,
                 },
               });
 
@@ -134,9 +135,9 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('[chat] Error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Er is een fout opgetreden.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Er is een fout opgetreden.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

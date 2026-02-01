@@ -139,7 +139,8 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
   }
 
   const dueDate = action.dueDate ? new Date(action.dueDate) : null;
-  const isOverdue = dueDate && dueDate < new Date() && action.status !== 'DONE' && action.status !== 'CANCELLED';
+  const isOverdue =
+    dueDate && dueDate < new Date() && action.status !== 'DONE' && action.status !== 'CANCELLED';
   const allowedTransitions = STATUS_TRANSITIONS[action.status] ?? [];
 
   function handleSaveEdit() {
@@ -189,7 +190,11 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
           <h1 className="text-2xl font-bold">Actie Details</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => isEditing ? setIsEditing(false) : startEditing()}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => (isEditing ? setIsEditing(false) : startEditing())}
+          >
             <Edit className="mr-1 h-3 w-3" />
             {isEditing ? 'Annuleren' : 'Bewerken'}
           </Button>
@@ -204,7 +209,8 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
               <DialogHeader>
                 <DialogTitle>Actie verwijderen</DialogTitle>
                 <DialogDescription>
-                  Weet u zeker dat u deze actie wilt verwijderen? Dit kan niet ongedaan worden gemaakt.
+                  Weet u zeker dat u deze actie wilt verwijderen? Dit kan niet ongedaan worden
+                  gemaakt.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -300,7 +306,10 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={handleSaveEdit} disabled={updateAction.isPending || !editTitle}>
+                    <Button
+                      onClick={handleSaveEdit}
+                      disabled={updateAction.isPending || !editTitle}
+                    >
                       {updateAction.isPending ? 'Opslaan...' : 'Opslaan'}
                     </Button>
                     <Button variant="outline" onClick={() => setIsEditing(false)}>
@@ -514,12 +523,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
                   Deadline
                 </div>
                 {dueDate ? (
-                  <p
-                    className={cn(
-                      'text-sm',
-                      isOverdue && 'text-red-600 font-medium'
-                    )}
-                  >
+                  <p className={cn('text-sm', isOverdue && 'text-red-600 font-medium')}>
                     {dueDate.toLocaleDateString('nl-NL', {
                       day: 'numeric',
                       month: 'long',

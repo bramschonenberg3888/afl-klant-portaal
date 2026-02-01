@@ -49,8 +49,8 @@ export function LeadCaptureForm({ responseId, onComplete }: LeadCaptureFormProps
           </div>
           <CardTitle>Bijna klaar!</CardTitle>
           <CardDescription>
-            Vul uw gegevens in om uw resultaten te bekijken. Wij nemen vrijblijvend contact
-            met u op om uw resultaten te bespreken.
+            Vul uw gegevens in om uw resultaten te bekijken. Wij nemen vrijblijvend contact met u op
+            om uw resultaten te bespreken.
           </CardDescription>
         </CardHeader>
         <CardContent>

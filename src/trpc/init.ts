@@ -88,9 +88,11 @@ export const orgMemberProcedure = authedProcedure.use(async ({ ctx, next, getRaw
     });
   }
 
-  const org = membership?.organization ?? (await db.organization.findUnique({
-    where: { id: organizationId },
-  }));
+  const org =
+    membership?.organization ??
+    (await db.organization.findUnique({
+      where: { id: organizationId },
+    }));
 
   if (!org) {
     throw new TRPCError({ code: 'NOT_FOUND', message: 'Organization not found' });
@@ -101,7 +103,9 @@ export const orgMemberProcedure = authedProcedure.use(async ({ ctx, next, getRaw
       ...ctx,
       org,
       membership,
-      orgRole: membership?.role ?? (ctx.session.user.globalRole === 'ADMIN' ? 'ADMIN' as const : undefined),
+      orgRole:
+        membership?.role ??
+        (ctx.session.user.globalRole === 'ADMIN' ? ('ADMIN' as const) : undefined),
     },
   });
 });

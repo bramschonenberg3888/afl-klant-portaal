@@ -1,16 +1,17 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  orgMemberProcedure,
-  orgAdminProcedure,
-} from '../init';
+import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 const categories = [
-  'QUICKSCAN_REPORT', 'COMPLIANCE', 'SAFETY', 'WORK_INSTRUCTIONS',
-  'CERTIFICATES', 'TRAINING', 'TEMPLATE', 'OTHER',
+  'QUICKSCAN_REPORT',
+  'COMPLIANCE',
+  'SAFETY',
+  'WORK_INSTRUCTIONS',
+  'CERTIFICATES',
+  'TRAINING',
+  'TEMPLATE',
+  'OTHER',
 ] as const;
 
 export const clientDocumentsRouter = createTRPCRouter({
@@ -59,27 +60,25 @@ export const clientDocumentsRouter = createTRPCRouter({
     }),
 
   /** Get document by id with version history */
-  getById: authedProcedure
-    .input(z.object({ documentId: z.string() }))
-    .query(async ({ input }) => {
-      const doc = await db.clientDocument.findUnique({
-        where: { id: input.documentId },
-        include: {
-          uploadedBy: true,
-          organization: true,
-          versions: {
-            orderBy: { version: 'desc' },
-            include: { uploadedBy: true },
-          },
+  getById: authedProcedure.input(z.object({ documentId: z.string() })).query(async ({ input }) => {
+    const doc = await db.clientDocument.findUnique({
+      where: { id: input.documentId },
+      include: {
+        uploadedBy: true,
+        organization: true,
+        versions: {
+          orderBy: { version: 'desc' },
+          include: { uploadedBy: true },
         },
-      });
+      },
+    });
 
-      if (!doc) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
-      }
+    if (!doc) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
+    }
 
-      return doc;
-    }),
+    return doc;
+  }),
 
   /** Create (upload) a new document record */
   upload: orgMemberProcedure

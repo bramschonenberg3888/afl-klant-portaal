@@ -39,8 +39,8 @@ export default function PublicAssessmentPage() {
         <ClipboardCheck className="mx-auto h-16 w-16 text-primary" />
         <h1 className="text-3xl font-bold tracking-tight">Zelfevaluatie Magazijnveiligheid</h1>
         <p className="mx-auto max-w-lg text-muted-foreground">
-          Ontdek hoe uw magazijn scoort op het gebied van effici&euml;ntie en veiligheid.
-          Deze zelfevaluatie geeft u direct inzicht in verbetermogelijkheden.
+          Ontdek hoe uw magazijn scoort op het gebied van effici&euml;ntie en veiligheid. Deze
+          zelfevaluatie geeft u direct inzicht in verbetermogelijkheden.
         </p>
       </div>
 

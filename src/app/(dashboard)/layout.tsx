@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
-import { SessionProvider } from 'next-auth/react';
+import { AuthSessionProvider } from '@/components/auth/session-provider';
 import { DashboardHeader } from '@/components/layout/dashboard-header';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -11,11 +11,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <SessionProvider session={session}>
+    <AuthSessionProvider session={session}>
       <div className="flex min-h-svh flex-col">
         <DashboardHeader />
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
-    </SessionProvider>
+    </AuthSessionProvider>
   );
 }

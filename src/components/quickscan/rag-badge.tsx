@@ -9,10 +9,21 @@ const scoreConfig: Record<RAGScore, { label: string; className: string }> = {
   GROEN: { label: 'Groen', className: 'bg-green-100 text-green-800 border-green-200' },
 };
 
-export function RAGBadge({ score, size = 'default' }: { score: RAGScore | null | undefined; size?: 'sm' | 'default' }) {
+export function RAGBadge({
+  score,
+  size = 'default',
+}: {
+  score: RAGScore | null | undefined;
+  size?: 'sm' | 'default';
+}) {
   if (!score) {
     return (
-      <span className={cn('inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 border-gray-200', size === 'sm' && 'px-2 py-0 text-[10px]')}>
+      <span
+        className={cn(
+          'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-500 border-gray-200',
+          size === 'sm' && 'px-2 py-0 text-[10px]'
+        )}
+      >
         N/A
       </span>
     );
@@ -20,7 +31,13 @@ export function RAGBadge({ score, size = 'default' }: { score: RAGScore | null |
 
   const config = scoreConfig[score];
   return (
-    <span className={cn('inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold', config.className, size === 'sm' && 'px-2 py-0 text-[10px]')}>
+    <span
+      className={cn(
+        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold',
+        config.className,
+        size === 'sm' && 'px-2 py-0 text-[10px]'
+      )}
+    >
       {config.label}
     </span>
   );

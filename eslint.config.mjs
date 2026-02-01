@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import nextConfig from 'eslint-config-next';
 import prettierConfig from 'eslint-config-prettier';
 
-export default [
+const config = [
   {
     ignores: [
       '.next/**',
@@ -21,7 +21,10 @@ export default [
       'react/prop-types': 'off',
       '@next/next/no-html-link-for-pages': 'off',
       'no-undef': 'off', // TypeScript handles this
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
     },
   },
   {
@@ -32,3 +35,5 @@ export default [
   },
   prettierConfig,
 ];
+
+export default config;

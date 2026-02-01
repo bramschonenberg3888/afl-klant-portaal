@@ -62,13 +62,7 @@ function SortableActionCard({ action }: { action: ActionData }) {
   );
 }
 
-function DroppableColumn({
-  status,
-  actions,
-}: {
-  status: ActionStatus;
-  actions: ActionData[];
-}) {
+function DroppableColumn({ status, actions }: { status: ActionStatus; actions: ActionData[] }) {
   const actionIds = actions.map((a) => a.id);
 
   return (
@@ -186,9 +180,7 @@ export function ActionBoard({ organizationId, filters }: ActionBoardProps) {
         ))}
       </div>
 
-      <DragOverlay>
-        {activeAction && <ActionCard action={activeAction} isDragging />}
-      </DragOverlay>
+      <DragOverlay>{activeAction && <ActionCard action={activeAction} isDragging />}</DragOverlay>
     </DndContext>
   );
 }

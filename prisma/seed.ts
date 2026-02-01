@@ -150,7 +150,8 @@ async function main() {
     create: {
       id: 'default-template',
       title: 'Magazijn Zelfevaluatie',
-      description: 'Evalueer de veiligheid en efficiëntie van uw magazijn aan de hand van drie lagen.',
+      description:
+        'Evalueer de veiligheid en efficiëntie van uw magazijn aan de hand van drie lagen.',
       isActive: true,
       version: 1,
     },
@@ -165,70 +166,143 @@ async function main() {
     sortOrder: number;
   }> = [
     // Ruimte & Inrichting — Efficiëntie
-    { layer: 'RUIMTE_INRICHTING', perspective: 'EFFICIENT', sortOrder: 1,
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'EFFICIENT',
+      sortOrder: 1,
       questionText: 'Hoe goed is de indeling van uw magazijn afgestemd op de goederenstroom?',
-      helpText: 'Denk aan de routing van inkomende goederen, opslag en uitgaande goederen.' },
-    { layer: 'RUIMTE_INRICHTING', perspective: 'EFFICIENT', sortOrder: 2,
+      helpText: 'Denk aan de routing van inkomende goederen, opslag en uitgaande goederen.',
+    },
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'EFFICIENT',
+      sortOrder: 2,
       questionText: 'In hoeverre wordt de beschikbare ruimte optimaal benut?',
-      helpText: 'Overweeg de hoogte van stellingen, gangpadbreedtes en ongebruikte ruimtes.' },
-    { layer: 'RUIMTE_INRICHTING', perspective: 'EFFICIENT', sortOrder: 3,
+      helpText: 'Overweeg de hoogte van stellingen, gangpadbreedtes en ongebruikte ruimtes.',
+    },
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'EFFICIENT',
+      sortOrder: 3,
       questionText: 'Hoe efficiënt zijn de looproutes en transportpaden ingericht?',
-      helpText: 'Zijn er onnodige kruisingen of lange omwegen?' },
+      helpText: 'Zijn er onnodige kruisingen of lange omwegen?',
+    },
 
     // Ruimte & Inrichting — Veiligheid
-    { layer: 'RUIMTE_INRICHTING', perspective: 'VEILIG', sortOrder: 4,
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'VEILIG',
+      sortOrder: 4,
       questionText: 'Hoe goed zijn de veiligheidsmarkeringen en signaleringen aangebracht?',
-      helpText: 'Denk aan vloermarkeringen, waarschuwingsborden en nooduitgangen.' },
-    { layer: 'RUIMTE_INRICHTING', perspective: 'VEILIG', sortOrder: 5,
+      helpText: 'Denk aan vloermarkeringen, waarschuwingsborden en nooduitgangen.',
+    },
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'VEILIG',
+      sortOrder: 5,
       questionText: 'In welke mate voldoet de stellinginrichting aan veiligheidsnormen?',
-      helpText: 'Zijn stellingen gekeurd, voorzien van aanrijdbeveiliging en correct belast?' },
-    { layer: 'RUIMTE_INRICHTING', perspective: 'VEILIG', sortOrder: 6,
+      helpText: 'Zijn stellingen gekeurd, voorzien van aanrijdbeveiliging en correct belast?',
+    },
+    {
+      layer: 'RUIMTE_INRICHTING',
+      perspective: 'VEILIG',
+      sortOrder: 6,
       questionText: 'Hoe goed is de verlichting en het klimaat in het magazijn?',
-      helpText: 'Voldoende licht, ventilatie en temperatuurbeheersing voor veilig werken.' },
+      helpText: 'Voldoende licht, ventilatie en temperatuurbeheersing voor veilig werken.',
+    },
 
     // Werkwijze & Processen — Efficiëntie
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'EFFICIENT', sortOrder: 7,
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'EFFICIENT',
+      sortOrder: 7,
       questionText: 'Hoe gestandaardiseerd zijn de pick- en packprocessen?',
-      helpText: 'Zijn er duidelijke werkinstructies en wordt er consistent gewerkt?' },
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'EFFICIENT', sortOrder: 8,
+      helpText: 'Zijn er duidelijke werkinstructies en wordt er consistent gewerkt?',
+    },
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'EFFICIENT',
+      sortOrder: 8,
       questionText: 'In hoeverre worden hulpmiddelen en technologie effectief ingezet?',
-      helpText: 'Denk aan scanners, WMS-systemen, vorkheftrucks en transportbanden.' },
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'EFFICIENT', sortOrder: 9,
+      helpText: 'Denk aan scanners, WMS-systemen, vorkheftrucks en transportbanden.',
+    },
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'EFFICIENT',
+      sortOrder: 9,
       questionText: 'Hoe goed worden voorraadniveaus en -locaties beheerd?',
-      helpText: 'Is de voorraad actueel, worden ABC-analyses gebruikt?' },
+      helpText: 'Is de voorraad actueel, worden ABC-analyses gebruikt?',
+    },
 
     // Werkwijze & Processen — Veiligheid
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'VEILIG', sortOrder: 10,
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'VEILIG',
+      sortOrder: 10,
       questionText: 'In welke mate worden veiligheidsprocedures consequent gevolgd?',
-      helpText: 'Denk aan gebruik van PBM, veilig rijden met heftrucks, tilprotocollen.' },
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'VEILIG', sortOrder: 11,
+      helpText: 'Denk aan gebruik van PBM, veilig rijden met heftrucks, tilprotocollen.',
+    },
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'VEILIG',
+      sortOrder: 11,
       questionText: 'Hoe goed worden incidenten en bijna-ongevallen geregistreerd en opgevolgd?',
-      helpText: 'Is er een meldingssysteem en worden trends geanalyseerd?' },
-    { layer: 'WERKWIJZE_PROCESSEN', perspective: 'VEILIG', sortOrder: 12,
+      helpText: 'Is er een meldingssysteem en worden trends geanalyseerd?',
+    },
+    {
+      layer: 'WERKWIJZE_PROCESSEN',
+      perspective: 'VEILIG',
+      sortOrder: 12,
       questionText: 'In hoeverre zijn noodprocedures bekend en geoefend?',
-      helpText: 'Worden BHV-oefeningen gehouden en kennen medewerkers de vluchtwegen?' },
+      helpText: 'Worden BHV-oefeningen gehouden en kennen medewerkers de vluchtwegen?',
+    },
 
     // Organisatie & Besturing — Efficiëntie
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'EFFICIENT', sortOrder: 13,
-      questionText: 'Hoe goed wordt er gestuurd op KPI\'s en prestatie-indicatoren?',
-      helpText: 'Worden doorlooptijden, foutpercentages en productiviteit gemeten?' },
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'EFFICIENT', sortOrder: 14,
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'EFFICIENT',
+      sortOrder: 13,
+      questionText: "Hoe goed wordt er gestuurd op KPI's en prestatie-indicatoren?",
+      helpText: 'Worden doorlooptijden, foutpercentages en productiviteit gemeten?',
+    },
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'EFFICIENT',
+      sortOrder: 14,
       questionText: 'In hoeverre is de planning en capaciteitsinzet geoptimaliseerd?',
-      helpText: 'Worden pieken en dalen goed opgevangen? Is er flexibele inzet?' },
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'EFFICIENT', sortOrder: 15,
+      helpText: 'Worden pieken en dalen goed opgevangen? Is er flexibele inzet?',
+    },
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'EFFICIENT',
+      sortOrder: 15,
       questionText: 'Hoe effectief is de communicatie tussen afdelingen?',
-      helpText: 'Zijn er dagstarts, overlegmomenten en duidelijke verantwoordelijkheden?' },
+      helpText: 'Zijn er dagstarts, overlegmomenten en duidelijke verantwoordelijkheden?',
+    },
 
     // Organisatie & Besturing — Veiligheid
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'VEILIG', sortOrder: 16,
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'VEILIG',
+      sortOrder: 16,
       questionText: 'In welke mate is veiligheid verankerd in het beleid en de cultuur?',
-      helpText: 'Is er een veiligheidsbeleid, wordt dit uitgedragen door management?' },
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'VEILIG', sortOrder: 17,
+      helpText: 'Is er een veiligheidsbeleid, wordt dit uitgedragen door management?',
+    },
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'VEILIG',
+      sortOrder: 17,
       questionText: 'Hoe goed worden medewerkers opgeleid en gecertificeerd voor veilig werken?',
-      helpText: 'Denk aan heftruckcertificaten, BHV-opleidingen, toolbox meetings.' },
-    { layer: 'ORGANISATIE_BESTURING', perspective: 'VEILIG', sortOrder: 18,
-      questionText: 'In hoeverre voldoet de organisatie aan wettelijke veiligheidseisen (RI&E, Arbobesluit)?',
-      helpText: 'Is de RI&E actueel, zijn de actiepunten opgepakt, is er een preventiemedewerker?' },
+      helpText: 'Denk aan heftruckcertificaten, BHV-opleidingen, toolbox meetings.',
+    },
+    {
+      layer: 'ORGANISATIE_BESTURING',
+      perspective: 'VEILIG',
+      sortOrder: 18,
+      questionText:
+        'In hoeverre voldoet de organisatie aan wettelijke veiligheidseisen (RI&E, Arbobesluit)?',
+      helpText: 'Is de RI&E actueel, zijn de actiepunten opgepakt, is er een preventiemedewerker?',
+    },
   ];
 
   for (const q of assessmentQuestions) {

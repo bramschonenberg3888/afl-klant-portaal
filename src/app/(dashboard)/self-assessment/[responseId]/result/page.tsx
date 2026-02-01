@@ -6,7 +6,11 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-export default function AssessmentResultPage({ params }: { params: Promise<{ responseId: string }> }) {
+export default function AssessmentResultPage({
+  params,
+}: {
+  params: Promise<{ responseId: string }>;
+}) {
   const { responseId } = use(params);
 
   return (
@@ -18,11 +22,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ res
         </Link>
       </Button>
 
-      <AssessmentResult
-        responseId={responseId}
-        basePath="/self-assessment"
-        showDashboardLinks
-      />
+      <AssessmentResult responseId={responseId} basePath="/self-assessment" showDashboardLinks />
     </div>
   );
 }

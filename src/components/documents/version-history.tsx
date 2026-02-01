@@ -30,11 +30,7 @@ interface VersionHistoryProps {
 
 export function VersionHistory({ versions }: VersionHistoryProps) {
   if (versions.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground py-4">
-        Geen eerdere versies beschikbaar.
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground py-4">Geen eerdere versies beschikbaar.</p>;
   }
 
   return (
@@ -49,9 +45,7 @@ export function VersionHistory({ versions }: VersionHistoryProps) {
               <Badge variant="outline" className="text-[10px]">
                 v{version.version}
               </Badge>
-              <span className="truncate text-sm font-medium">
-                {version.fileName}
-              </span>
+              <span className="truncate text-sm font-medium">{version.fileName}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <span>{formatDate(version.createdAt)}</span>

@@ -29,9 +29,7 @@ export default function DocumentsPage() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">Documenten</h1>
-          <p className="text-muted-foreground">
-            Beheer en bekijk uw organisatiedocumenten.
-          </p>
+          <p className="text-muted-foreground">Beheer en bekijk uw organisatiedocumenten.</p>
         </div>
         <Button asChild>
           <Link href="/documents/upload">

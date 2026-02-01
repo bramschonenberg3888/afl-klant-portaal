@@ -59,7 +59,9 @@ export default function LayerDetailPage({
           </CardHeader>
           <CardContent>
             {efficiencyCell?.summary ? (
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{efficiencyCell.summary}</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {efficiencyCell.summary}
+              </p>
             ) : (
               <p className="text-sm text-muted-foreground">Geen samenvatting beschikbaar</p>
             )}
@@ -76,7 +78,9 @@ export default function LayerDetailPage({
           </CardHeader>
           <CardContent>
             {safetyCell?.summary ? (
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{safetyCell.summary}</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                {safetyCell.summary}
+              </p>
             ) : (
               <p className="text-sm text-muted-foreground">Geen samenvatting beschikbaar</p>
             )}

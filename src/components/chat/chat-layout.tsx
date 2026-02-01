@@ -10,9 +10,7 @@ interface ChatLayoutProps {
 }
 
 export function ChatLayout({ initialConversationId }: ChatLayoutProps) {
-  const [conversationId, setConversationId] = useState<string | undefined>(
-    initialConversationId
-  );
+  const [conversationId, setConversationId] = useState<string | undefined>(initialConversationId);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const handleSelect = (id: string) => {

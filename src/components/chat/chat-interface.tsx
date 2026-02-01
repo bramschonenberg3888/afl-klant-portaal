@@ -120,7 +120,10 @@ export function ChatInterface({ conversationId, onOpenSidebar }: ChatInterfacePr
     if (!message.parts) return [];
     return message.parts
       .filter((part): part is SourceUrlUIPart => part.type === 'source-url')
-      .map((part) => ({ url: part.url, title: (part as SourceUrlUIPart & { title?: string }).title || '' }));
+      .map((part) => ({
+        url: part.url,
+        title: (part as SourceUrlUIPart & { title?: string }).title || '',
+      }));
   };
 
   return (
@@ -161,9 +164,7 @@ export function ChatInterface({ conversationId, onOpenSidebar }: ChatInterfacePr
                   key={message.id}
                   role={message.role as 'user' | 'assistant'}
                   content={getMessageContent(message)}
-                  sources={
-                    message.role === 'assistant' ? getMessageSources(message) : undefined
-                  }
+                  sources={message.role === 'assistant' ? getMessageSources(message) : undefined}
                 />
               ))}
               {isLoading && <Message role="assistant" content="" isLoading />}

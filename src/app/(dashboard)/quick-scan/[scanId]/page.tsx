@@ -66,7 +66,9 @@ export default function ScanDetailPage({ params }: { params: Promise<{ scanId: s
 
       {scan.summary && (
         <Card>
-          <CardHeader><CardTitle>Samenvatting</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>Samenvatting</CardTitle>
+          </CardHeader>
           <CardContent>
             <p className="text-sm whitespace-pre-wrap">{scan.summary}</p>
           </CardContent>

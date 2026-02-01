@@ -77,16 +77,20 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
                     : 'border-border bg-background'
                 )}
               >
-                <span className={cn(
-                  'text-lg font-bold',
-                  value.score === score ? 'text-primary' : 'text-foreground'
-                )}>
+                <span
+                  className={cn(
+                    'text-lg font-bold',
+                    value.score === score ? 'text-primary' : 'text-foreground'
+                  )}
+                >
                   {score}
                 </span>
-                <span className={cn(
-                  'text-[10px] leading-tight',
-                  value.score === score ? 'text-primary font-medium' : 'text-muted-foreground'
-                )}>
+                <span
+                  className={cn(
+                    'text-[10px] leading-tight',
+                    value.score === score ? 'text-primary font-medium' : 'text-muted-foreground'
+                  )}
+                >
                   {scoreLabels[score]}
                 </span>
               </button>

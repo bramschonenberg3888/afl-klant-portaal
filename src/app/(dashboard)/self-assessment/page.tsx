@@ -8,25 +8,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { MatrixGrid } from '@/components/quickscan/matrix-grid';
-import {
-  ClipboardCheck,
-  ArrowRight,
-  History,
-  Loader2,
-  CheckCircle2,
-  Clock,
-} from 'lucide-react';
+import { ClipboardCheck, ArrowRight, History, Loader2, CheckCircle2, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SelfAssessmentPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const { data: template, isLoading: templateLoading } = trpc.assessment.getActiveTemplate.useQuery();
-  const { data: myAssessments, isLoading: assessmentsLoading } = trpc.assessment.getMyAssessments.useQuery(
-    undefined,
-    { enabled: !!session?.user }
-  );
+  const { data: template, isLoading: templateLoading } =
+    trpc.assessment.getActiveTemplate.useQuery();
+  const { data: myAssessments, isLoading: assessmentsLoading } =
+    trpc.assessment.getMyAssessments.useQuery(undefined, { enabled: !!session?.user });
 
   const startAssessment = trpc.assessment.startAssessment.useMutation({
     onSuccess: (response) => {
@@ -85,15 +77,17 @@ export default function SelfAssessmentPage() {
             Magazijn Zelfevaluatie
           </CardTitle>
           <CardDescription>
-            Beantwoord vragen over drie lagen van uw magazijn: Ruimte &amp; Inrichting,
-            Werkwijze &amp; Processen, en Organisatie &amp; Besturing. Elke laag wordt beoordeeld
-            vanuit twee perspectieven: Effici&euml;ntie en Veiligheid.
+            Beantwoord vragen over drie lagen van uw magazijn: Ruimte &amp; Inrichting, Werkwijze
+            &amp; Processen, en Organisatie &amp; Besturing. Elke laag wordt beoordeeld vanuit twee
+            perspectieven: Effici&euml;ntie en Veiligheid.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-lg border bg-muted/30 p-3 text-center">
-              <p className="text-2xl font-bold text-primary">{template?.questions?.length ?? '—'}</p>
+              <p className="text-2xl font-bold text-primary">
+                {template?.questions?.length ?? '—'}
+              </p>
               <p className="text-xs text-muted-foreground">Vragen</p>
             </div>
             <div className="rounded-lg border bg-muted/30 p-3 text-center">
@@ -110,17 +104,13 @@ export default function SelfAssessmentPage() {
 
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>
-              Na het invullen ontvangt u direct een overzicht van uw scores in een 3x2 matrix
-              met RAG-beoordeling (Rood/Oranje/Groen). Dit geeft u inzicht in waar uw
-              magazijn goed presteert en waar verbetermogelijkheden liggen.
+              Na het invullen ontvangt u direct een overzicht van uw scores in een 3x2 matrix met
+              RAG-beoordeling (Rood/Oranje/Groen). Dit geeft u inzicht in waar uw magazijn goed
+              presteert en waar verbetermogelijkheden liggen.
             </p>
           </div>
 
-          <Button
-            size="lg"
-            onClick={handleStart}
-            disabled={!template || startAssessment.isPending}
-          >
+          <Button size="lg" onClick={handleStart} disabled={!template || startAssessment.isPending}>
             {startAssessment.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -182,7 +172,8 @@ export default function SelfAssessmentPage() {
               Eerdere evaluaties
             </CardTitle>
             <CardDescription>
-              Uw {completedAssessments.length} meest recente afgeronde evaluatie{completedAssessments.length !== 1 && 's'}
+              Uw {completedAssessments.length} meest recente afgeronde evaluatie
+              {completedAssessments.length !== 1 && 's'}
             </CardDescription>
           </CardHeader>
           <CardContent>

@@ -5,7 +5,13 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { MatrixGrid, layerLabels, perspectiveLabels, layers, perspectives } from '@/components/quickscan/matrix-grid';
+import {
+  MatrixGrid,
+  layerLabels,
+  perspectiveLabels,
+  layers,
+  perspectives,
+} from '@/components/quickscan/matrix-grid';
 import { RAGBadge } from '@/components/quickscan/rag-badge';
 import { MessageSquare, Download, ArrowLeft, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
@@ -25,7 +31,11 @@ interface AssessmentResultProps {
   showDashboardLinks?: boolean;
 }
 
-export function AssessmentResult({ responseId, basePath = '/self-assessment', showDashboardLinks = true }: AssessmentResultProps) {
+export function AssessmentResult({
+  responseId,
+  basePath = '/self-assessment',
+  showDashboardLinks = true,
+}: AssessmentResultProps) {
   const { data: result, isLoading } = trpc.assessment.getResult.useQuery({ responseId });
 
   if (isLoading) {
@@ -70,11 +80,12 @@ export function AssessmentResult({ responseId, basePath = '/self-assessment', sh
   });
 
   // Determine overall assessment
-  const overallMessage = ragCounts.ROOD > 0
-    ? 'Uw magazijn heeft aandachtspunten die directe actie vereisen. Wij adviseren u om contact op te nemen voor een uitgebreide QuickScan.'
-    : ragCounts.ORANJE > 0
-      ? 'Uw magazijn scoort redelijk, maar er zijn verbeterpunten. Een QuickScan kan helpen om gerichte verbeteracties te identificeren.'
-      : 'Uw magazijn scoort goed op alle vlakken. Blijf het huidige niveau onderhouden en overweeg een periodieke evaluatie.';
+  const overallMessage =
+    ragCounts.ROOD > 0
+      ? 'Uw magazijn heeft aandachtspunten die directe actie vereisen. Wij adviseren u om contact op te nemen voor een uitgebreide QuickScan.'
+      : ragCounts.ORANJE > 0
+        ? 'Uw magazijn scoort redelijk, maar er zijn verbeterpunten. Een QuickScan kan helpen om gerichte verbeteracties te identificeren.'
+        : 'Uw magazijn scoort goed op alle vlakken. Blijf het huidige niveau onderhouden en overweeg een periodieke evaluatie.';
 
   return (
     <div className="space-y-8">
@@ -84,11 +95,15 @@ export function AssessmentResult({ responseId, basePath = '/self-assessment', sh
         <p className="mt-1 text-sm text-muted-foreground">
           {result.template?.title || 'Magazijn Zelfevaluatie'}
           {result.completedAt && (
-            <> &mdash; {new Date(result.completedAt).toLocaleDateString('nl-NL', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}</>
+            <>
+              {' '}
+              &mdash;{' '}
+              {new Date(result.completedAt).toLocaleDateString('nl-NL', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })}
+            </>
           )}
         </p>
       </div>
@@ -131,7 +146,7 @@ export function AssessmentResult({ responseId, basePath = '/self-assessment', sh
                           'flex items-center justify-between rounded-lg border px-4 py-3',
                           cell.score === 'ROOD' && 'border-red-200 bg-red-50',
                           cell.score === 'ORANJE' && 'border-orange-200 bg-orange-50',
-                          cell.score === 'GROEN' && 'border-green-200 bg-green-50',
+                          cell.score === 'GROEN' && 'border-green-200 bg-green-50'
                         )}
                       >
                         <div>
@@ -208,7 +223,11 @@ export function AssessmentResult({ responseId, basePath = '/self-assessment', sh
         )}
         {!showDashboardLinks && (
           <Button asChild>
-            <Link href="https://logistiekconcurrent.nl/contact" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://logistiekconcurrent.nl/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <MessageSquare className="mr-2 h-4 w-4" />
               Neem contact op voor een QuickScan
             </Link>

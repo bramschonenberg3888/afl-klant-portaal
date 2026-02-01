@@ -72,7 +72,8 @@ interface ActionCardProps {
 
 export function ActionCard({ action, isDragging }: ActionCardProps) {
   const dueDate = action.dueDate ? new Date(action.dueDate) : null;
-  const isOverdue = dueDate && dueDate < new Date() && action.status !== 'DONE' && action.status !== 'CANCELLED';
+  const isOverdue =
+    dueDate && dueDate < new Date() && action.status !== 'DONE' && action.status !== 'CANCELLED';
 
   return (
     <Link href={`/actions/${action.id}`}>
@@ -86,7 +87,10 @@ export function ActionCard({ action, isDragging }: ActionCardProps) {
         <CardContent className="p-4 space-y-3">
           <div className="flex items-start justify-between gap-2">
             <h3 className="text-sm font-medium leading-tight line-clamp-2">{action.title}</h3>
-            <Badge className={cn('shrink-0 text-[10px]', STATUS_COLORS[action.status])} variant="secondary">
+            <Badge
+              className={cn('shrink-0 text-[10px]', STATUS_COLORS[action.status])}
+              variant="secondary"
+            >
               {STATUS_LABELS[action.status]}
             </Badge>
           </div>
@@ -118,14 +122,16 @@ export function ActionCard({ action, isDragging }: ActionCardProps) {
                   <TooltipTrigger asChild>
                     <Avatar className="size-6">
                       <AvatarFallback className="text-[10px]">
-                        {action.assignee.name
-                          ? action.assignee.name
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                              .toUpperCase()
-                              .slice(0, 2)
-                          : <User className="size-3" />}
+                        {action.assignee.name ? (
+                          action.assignee.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')
+                            .toUpperCase()
+                            .slice(0, 2)
+                        ) : (
+                          <User className="size-3" />
+                        )}
                       </AvatarFallback>
                     </Avatar>
                   </TooltipTrigger>
@@ -152,4 +158,11 @@ export function ActionCard({ action, isDragging }: ActionCardProps) {
   );
 }
 
-export { STATUS_LABELS, STATUS_COLORS, PRIORITY_LABELS, PRIORITY_BORDER_COLORS, LAYER_LABELS, PERSPECTIVE_LABELS };
+export {
+  STATUS_LABELS,
+  STATUS_COLORS,
+  PRIORITY_LABELS,
+  PRIORITY_BORDER_COLORS,
+  LAYER_LABELS,
+  PERSPECTIVE_LABELS,
+};

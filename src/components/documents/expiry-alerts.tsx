@@ -75,9 +75,7 @@ export function ExpiryAlerts({ organizationId }: ExpiryAlertsProps) {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{doc.title}</p>
                   {doc.uploadedBy?.name && (
-                    <p className="text-xs text-muted-foreground">
-                      {doc.uploadedBy.name}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{doc.uploadedBy.name}</p>
                   )}
                 </div>
                 <div

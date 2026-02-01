@@ -17,12 +17,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { VersionHistory } from './version-history';
-import {
-  CATEGORY_LABELS,
-  formatFileSize,
-  formatDate,
-  getExpiryStatus,
-} from './document-card';
+import { CATEGORY_LABELS, formatFileSize, formatDate, getExpiryStatus } from './document-card';
 import type { DocumentCategory } from '@/generated/prisma/client';
 
 interface Version {
@@ -73,9 +68,7 @@ export function DocumentDetail({ document }: DocumentDetailProps) {
                 <CardTitle>{document.title}</CardTitle>
               </div>
               {document.description && (
-                <p className="text-sm text-muted-foreground">
-                  {document.description}
-                </p>
+                <p className="text-sm text-muted-foreground">{document.description}</p>
               )}
             </div>
             <Button asChild>
@@ -91,9 +84,7 @@ export function DocumentDetail({ document }: DocumentDetailProps) {
             <div className="flex items-center gap-2 text-sm">
               <Tag className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Categorie:</span>
-              <Badge variant="secondary">
-                {CATEGORY_LABELS[document.category]}
-              </Badge>
+              <Badge variant="secondary">{CATEGORY_LABELS[document.category]}</Badge>
             </div>
 
             <div className="flex items-center gap-2 text-sm">
@@ -134,9 +125,7 @@ export function DocumentDetail({ document }: DocumentDetailProps) {
                   <AlertTriangle
                     className={cn(
                       'h-4 w-4',
-                      expiryStatus === 'expired'
-                        ? 'text-red-500'
-                        : 'text-amber-500'
+                      expiryStatus === 'expired' ? 'text-red-500' : 'text-amber-500'
                     )}
                   />
                 ) : (

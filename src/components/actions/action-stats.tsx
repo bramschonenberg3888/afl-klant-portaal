@@ -28,12 +28,48 @@ export function ActionStats({ organizationId }: ActionStatsProps) {
   const progressPercent = stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0;
 
   const statItems = [
-    { label: 'Totaal', value: stats.total, icon: ListTodo, color: 'text-foreground', bg: 'bg-muted' },
-    { label: 'Te doen', value: stats.todo, icon: ListTodo, color: 'text-slate-600', bg: 'bg-slate-50' },
-    { label: 'In uitvoering', value: stats.inProgress, icon: PlayCircle, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Afgerond', value: stats.done, icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'Uitgesteld', value: stats.deferred, icon: PauseCircle, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Geannuleerd', value: stats.cancelled, icon: XCircle, color: 'text-red-600', bg: 'bg-red-50' },
+    {
+      label: 'Totaal',
+      value: stats.total,
+      icon: ListTodo,
+      color: 'text-foreground',
+      bg: 'bg-muted',
+    },
+    {
+      label: 'Te doen',
+      value: stats.todo,
+      icon: ListTodo,
+      color: 'text-slate-600',
+      bg: 'bg-slate-50',
+    },
+    {
+      label: 'In uitvoering',
+      value: stats.inProgress,
+      icon: PlayCircle,
+      color: 'text-blue-600',
+      bg: 'bg-blue-50',
+    },
+    {
+      label: 'Afgerond',
+      value: stats.done,
+      icon: CheckCircle2,
+      color: 'text-green-600',
+      bg: 'bg-green-50',
+    },
+    {
+      label: 'Uitgesteld',
+      value: stats.deferred,
+      icon: PauseCircle,
+      color: 'text-amber-600',
+      bg: 'bg-amber-50',
+    },
+    {
+      label: 'Geannuleerd',
+      value: stats.cancelled,
+      icon: XCircle,
+      color: 'text-red-600',
+      bg: 'bg-red-50',
+    },
   ];
 
   return (

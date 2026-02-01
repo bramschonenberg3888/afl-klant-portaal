@@ -1,12 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  orgMemberProcedure,
-  orgAdminProcedure,
-} from '../init';
+import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 const LAYERS = ['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'] as const;
 const PERSPECTIVES = ['EFFICIENT', 'VEILIG'] as const;
@@ -30,27 +25,28 @@ export const quickscanRouter = createTRPCRouter({
     }),
 
   /** Get a specific scan by id */
-  getById: authedProcedure
-    .input(z.object({ scanId: z.string() }))
-    .query(async ({ input }) => {
-      const scan = await db.quickScan.findUnique({
-        where: { id: input.scanId },
-        include: {
-          organization: true,
-          cells: { include: { findings: true } },
-          findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
-          roadmapItems: { include: { owner: true }, orderBy: [{ timeframe: 'asc' }, { priority: 'desc' }] },
-          consultant: true,
-          accountManager: true,
+  getById: authedProcedure.input(z.object({ scanId: z.string() })).query(async ({ input }) => {
+    const scan = await db.quickScan.findUnique({
+      where: { id: input.scanId },
+      include: {
+        organization: true,
+        cells: { include: { findings: true } },
+        findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
+        roadmapItems: {
+          include: { owner: true },
+          orderBy: [{ timeframe: 'asc' }, { priority: 'desc' }],
         },
-      });
+        consultant: true,
+        accountManager: true,
+      },
+    });
 
-      if (!scan) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
-      }
+    if (!scan) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+    }
 
-      return scan;
-    }),
+    return scan;
+  }),
 
   /** List scans for an org */
   listForOrg: orgMemberProcedure

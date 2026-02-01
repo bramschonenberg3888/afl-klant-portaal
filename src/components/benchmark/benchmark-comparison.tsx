@@ -2,7 +2,12 @@
 
 import { cn } from '@/lib/utils';
 import { RAGBadge } from '@/components/quickscan/rag-badge';
-import { layerLabels, perspectiveLabels, layers, perspectives } from '@/components/quickscan/matrix-grid';
+import {
+  layerLabels,
+  perspectiveLabels,
+  layers,
+  perspectives,
+} from '@/components/quickscan/matrix-grid';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { Layer, Perspective, RAGScore } from '@/generated/prisma/client';
@@ -66,9 +71,7 @@ export function BenchmarkComparison({ scan, benchmark, totalScans }: BenchmarkCo
             <tbody>
               {layers.map((layer) => (
                 <tr key={layer}>
-                  <td className="p-3 text-sm font-medium">
-                    {layerLabels[layer]}
-                  </td>
+                  <td className="p-3 text-sm font-medium">{layerLabels[layer]}</td>
                   {perspectives.map((perspective) => {
                     const scanCell = getScanCell(layer, perspective);
                     const benchmarkCell = getBenchmarkCell(layer, perspective);
@@ -127,9 +130,7 @@ export function BenchmarkComparison({ scan, benchmark, totalScans }: BenchmarkCo
                             {comparison === 'equal' && (
                               <>
                                 <Minus className="h-4 w-4 text-gray-500" />
-                                <span className="text-xs font-medium text-gray-600">
-                                  Gemiddeld
-                                </span>
+                                <span className="text-xs font-medium text-gray-600">Gemiddeld</span>
                               </>
                             )}
                           </div>

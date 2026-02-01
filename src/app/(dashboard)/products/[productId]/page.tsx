@@ -4,14 +4,7 @@ import { use, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import {
-  ArrowLeft,
-  Package,
-  ExternalLink,
-  Tag,
-  Layers,
-  Info,
-} from 'lucide-react';
+import { ArrowLeft, Package, ExternalLink, Tag, Layers, Info } from 'lucide-react';
 import { trpc } from '@/trpc/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -58,11 +51,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ produc
   }
 
   if (!product) {
-    return (
-      <div className="py-12 text-center text-muted-foreground">
-        Product niet gevonden.
-      </div>
-    );
+    return <div className="py-12 text-center text-muted-foreground">Product niet gevonden.</div>;
   }
 
   return (
@@ -118,9 +107,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ produc
 
             <h1 className="text-3xl font-bold tracking-tight">{product.name}</h1>
 
-            {product.sku && (
-              <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>
-            )}
+            {product.sku && <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>}
 
             {product.priceRange && (
               <p className="text-xl font-semibold text-primary">{product.priceRange}</p>
@@ -145,11 +132,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ produc
               productName={product.name}
               open={_quoteOpen}
               onOpenChange={setQuoteOpen}
-              trigger={
-                <Button size="lg">
-                  Offerte Aanvragen
-                </Button>
-              }
+              trigger={<Button size="lg">Offerte Aanvragen</Button>}
             />
             {product.productUrl && (
               <Button variant="outline" size="lg" asChild>
@@ -175,10 +158,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ produc
           <CardContent>
             <div className="space-y-3">
               {product.recommendations.map((rec) => (
-                <div
-                  key={rec.id}
-                  className="rounded-lg border p-3 space-y-1"
-                >
+                <div key={rec.id} className="rounded-lg border p-3 space-y-1">
                   {rec.finding && (
                     <p className="text-sm font-medium">
                       {rec.finding.title ?? rec.finding.description}
@@ -189,9 +169,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ produc
                       {rec.action.title ?? rec.action.description}
                     </p>
                   )}
-                  {rec.context && (
-                    <p className="text-xs text-muted-foreground">{rec.context}</p>
-                  )}
+                  {rec.context && <p className="text-xs text-muted-foreground">{rec.context}</p>}
                 </div>
               ))}
             </div>

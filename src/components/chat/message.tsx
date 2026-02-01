@@ -150,9 +150,7 @@ function SourceCitation({ source, index }: { source: SourceInfo; index: number }
         {index + 1}
       </span>
       <span className="flex flex-col min-w-0">
-        {source.title && (
-          <span className="truncate max-w-[180px] font-medium">{source.title}</span>
-        )}
+        {source.title && <span className="truncate max-w-[180px] font-medium">{source.title}</span>}
         <span className="truncate max-w-[180px] text-muted-foreground">{hostname}</span>
       </span>
       <ExternalLink className="h-3 w-3 shrink-0 text-muted-foreground" />

@@ -18,9 +18,7 @@ export function BenchmarkNotAvailable({ totalScans }: BenchmarkNotAvailableProps
           {totalScans !== undefined && totalScans > 0 && (
             <> Op dit moment zijn er {totalScans} scans voltooid.</>
           )}
-          {totalScans === 0 && (
-            <> Er zijn nog geen scans voltooid.</>
-          )}
+          {totalScans === 0 && <> Er zijn nog geen scans voltooid.</>}
         </p>
         {totalScans !== undefined && (
           <div className="mt-6 flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-2">

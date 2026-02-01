@@ -41,8 +41,8 @@ export default function AssessmentHistoryPage() {
           <ClipboardCheck className="h-16 w-16 text-muted-foreground/30" />
           <h2 className="mt-6 text-xl font-semibold">Geen evaluaties gevonden</h2>
           <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            U heeft nog geen zelfevaluaties uitgevoerd. Start uw eerste evaluatie om
-            inzicht te krijgen in de veiligheid en effici&euml;ntie van uw magazijn.
+            U heeft nog geen zelfevaluaties uitgevoerd. Start uw eerste evaluatie om inzicht te
+            krijgen in de veiligheid en effici&euml;ntie van uw magazijn.
           </p>
           <Button className="mt-6" asChild>
             <Link href="/self-assessment">
@@ -59,28 +59,32 @@ export default function AssessmentHistoryPage() {
           {assessments.map((assessment) => {
             const isCompleted = assessment.status === 'COMPLETED';
             const statusLabel = isCompleted ? 'Afgerond' : 'Niet afgerond';
-            const statusVariant = isCompleted ? 'secondary' as const : 'outline' as const;
+            const statusVariant = isCompleted ? ('secondary' as const) : ('outline' as const);
 
             return (
               <Card key={assessment.id}>
                 <CardContent className="space-y-3 py-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">
-                        {assessment.template?.title || 'Zelfevaluatie'}
-                      </p>
+                      <p className="font-medium">{assessment.template?.title || 'Zelfevaluatie'}</p>
                       <p className="text-xs text-muted-foreground">
                         {isCompleted && assessment.completedAt
-                          ? `Afgerond op ${new Date(assessment.completedAt).toLocaleDateString('nl-NL', {
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric',
-                            })}`
-                          : `Gestart op ${new Date(assessment.createdAt).toLocaleDateString('nl-NL', {
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric',
-                            })}`}
+                          ? `Afgerond op ${new Date(assessment.completedAt).toLocaleDateString(
+                              'nl-NL',
+                              {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                              }
+                            )}`
+                          : `Gestart op ${new Date(assessment.createdAt).toLocaleDateString(
+                              'nl-NL',
+                              {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                              }
+                            )}`}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

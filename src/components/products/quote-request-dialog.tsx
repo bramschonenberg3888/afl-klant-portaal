@@ -156,11 +156,7 @@ export function QuoteRequestDialog({
               </div>
 
               <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleOpenChange(false)}
-                >
+                <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                   Annuleren
                 </Button>
                 <Button type="submit" disabled={requestQuote.isPending}>

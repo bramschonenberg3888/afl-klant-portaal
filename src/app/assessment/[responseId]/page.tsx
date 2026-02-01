@@ -21,5 +21,7 @@ export default function PublicAssessmentWizardPage({
     );
   }
 
-  return <AssessmentWizard templateId={template.id} responseId={responseId} basePath="/assessment" />;
+  return (
+    <AssessmentWizard templateId={template.id} responseId={responseId} basePath="/assessment" />
+  );
 }

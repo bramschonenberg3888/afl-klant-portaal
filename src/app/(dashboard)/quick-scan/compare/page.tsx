@@ -19,7 +19,11 @@ export default function ComparePage() {
   );
 
   if (!scanIdA || !scanIdB) {
-    return <p className="text-center py-12 text-muted-foreground">Selecteer twee scans om te vergelijken.</p>;
+    return (
+      <p className="text-center py-12 text-muted-foreground">
+        Selecteer twee scans om te vergelijken.
+      </p>
+    );
   }
 
   return (

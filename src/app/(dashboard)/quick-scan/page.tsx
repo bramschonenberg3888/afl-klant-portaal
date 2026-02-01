@@ -24,7 +24,9 @@ export default function QuickScanPage() {
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <ClipboardCheck className="h-12 w-12 text-muted-foreground/40" />
         <p className="mt-4 text-lg font-medium">Geen organisatie geselecteerd</p>
-        <p className="text-sm text-muted-foreground">Selecteer een organisatie om uw QuickScan te bekijken.</p>
+        <p className="text-sm text-muted-foreground">
+          Selecteer een organisatie om uw QuickScan te bekijken.
+        </p>
       </div>
     );
   }
@@ -44,7 +46,8 @@ export default function QuickScanPage() {
         <ClipboardCheck className="h-16 w-16 text-muted-foreground/30" />
         <h2 className="mt-6 text-xl font-semibold">Nog geen QuickScan beschikbaar</h2>
         <p className="mt-2 max-w-md text-sm text-muted-foreground">
-          Er is nog geen QuickScan uitgevoerd voor uw organisatie. Neem contact op met uw consultant om een scan in te plannen.
+          Er is nog geen QuickScan uitgevoerd voor uw organisatie. Neem contact op met uw consultant
+          om een scan in te plannen.
         </p>
         <Button className="mt-6" asChild>
           <Link href="/chat">

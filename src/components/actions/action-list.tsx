@@ -127,12 +127,22 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <SortableHead field="title" onToggleSort={toggleSort}>Titel</SortableHead>
-          <SortableHead field="status" onToggleSort={toggleSort}>Status</SortableHead>
-          <SortableHead field="priority" onToggleSort={toggleSort}>Prioriteit</SortableHead>
+          <SortableHead field="title" onToggleSort={toggleSort}>
+            Titel
+          </SortableHead>
+          <SortableHead field="status" onToggleSort={toggleSort}>
+            Status
+          </SortableHead>
+          <SortableHead field="priority" onToggleSort={toggleSort}>
+            Prioriteit
+          </SortableHead>
           <TableHead>Toegewezen aan</TableHead>
-          <SortableHead field="dueDate" onToggleSort={toggleSort}>Deadline</SortableHead>
-          <SortableHead field="layer" onToggleSort={toggleSort}>Laag</SortableHead>
+          <SortableHead field="dueDate" onToggleSort={toggleSort}>
+            Deadline
+          </SortableHead>
+          <SortableHead field="layer" onToggleSort={toggleSort}>
+            Laag
+          </SortableHead>
           <TableHead className="w-10" />
         </TableRow>
       </TableHeader>
@@ -156,7 +166,10 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
                 </Link>
               </TableCell>
               <TableCell>
-                <Badge className={cn('text-[10px]', STATUS_COLORS[action.status])} variant="secondary">
+                <Badge
+                  className={cn('text-[10px]', STATUS_COLORS[action.status])}
+                  variant="secondary"
+                >
                   {STATUS_LABELS[action.status]}
                 </Badge>
               </TableCell>
@@ -215,7 +228,12 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
                 )}
               </TableCell>
               <TableCell>
-                <Button variant="ghost" size="icon-xs" asChild className="opacity-0 group-hover:opacity-100">
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  asChild
+                  className="opacity-0 group-hover:opacity-100"
+                >
                   <Link href={`/actions/${action.id}`}>
                     <ExternalLink className="size-3" />
                   </Link>

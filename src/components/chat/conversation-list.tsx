@@ -96,11 +96,7 @@ export function ConversationList({ activeId, onSelect, onNewChat }: Conversation
   return (
     <div className="flex flex-col h-full min-h-0 border-r">
       <div className="p-3 border-b">
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2"
-          onClick={onNewChat}
-        >
+        <Button variant="outline" className="w-full justify-start gap-2" onClick={onNewChat}>
           <MessageSquarePlus className="h-4 w-4" />
           Nieuw gesprek
         </Button>
@@ -156,21 +152,22 @@ export function ConversationList({ activeId, onSelect, onNewChat }: Conversation
           ))}
 
           {conversations?.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-4">
-              Nog geen gesprekken
-            </p>
+            <p className="text-sm text-muted-foreground text-center py-4">Nog geen gesprekken</p>
           )}
         </div>
       </div>
 
       {/* Delete confirmation dialog */}
-      <Dialog open={deleteId !== null} onOpenChange={(open) => { if (!open) setDeleteId(null); }}>
+      <Dialog
+        open={deleteId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteId(null);
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Gesprek verwijderen?</DialogTitle>
-            <DialogDescription>
-              Dit kan niet ongedaan worden gemaakt.
-            </DialogDescription>
+            <DialogDescription>Dit kan niet ongedaan worden gemaakt.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteId(null)}>

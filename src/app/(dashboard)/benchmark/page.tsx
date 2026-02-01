@@ -15,15 +15,10 @@ export default function BenchmarkPage() {
   const orgId = session?.user?.organizationId;
   const isAdmin = session?.user?.globalRole === 'ADMIN';
 
-  const {
-    data: latestBenchmark,
-    isLoading: benchmarkLoading,
-  } = trpc.benchmark.getLatestBenchmark.useQuery();
+  const { data: latestBenchmark, isLoading: benchmarkLoading } =
+    trpc.benchmark.getLatestBenchmark.useQuery();
 
-  const {
-    data: myPosition,
-    isLoading: positionLoading,
-  } = trpc.benchmark.getMyPosition.useQuery(
+  const { data: myPosition, isLoading: positionLoading } = trpc.benchmark.getMyPosition.useQuery(
     { organizationId: orgId! },
     { enabled: !!orgId }
   );
@@ -70,20 +65,17 @@ export default function BenchmarkPage() {
           </p>
         </div>
         {isAdmin && (
-          <Button
-            onClick={() => generateMutation.mutate()}
-            disabled={generateMutation.isPending}
-          >
-            <RefreshCw className={`mr-2 h-4 w-4 ${generateMutation.isPending ? 'animate-spin' : ''}`} />
+          <Button onClick={() => generateMutation.mutate()} disabled={generateMutation.isPending}>
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${generateMutation.isPending ? 'animate-spin' : ''}`}
+            />
             Benchmark Genereren
           </Button>
         )}
       </div>
 
       {/* No benchmark available */}
-      {!hasBenchmark && (
-        <BenchmarkNotAvailable totalScans={benchmarkTotalScans} />
-      )}
+      {!hasBenchmark && <BenchmarkNotAvailable totalScans={benchmarkTotalScans} />}
 
       {/* Benchmark exists but user has no scan */}
       {hasBenchmark && !hasScan && (

@@ -97,7 +97,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
         session.user.globalRole = token.globalRole as import('@/generated/prisma/client').UserRole;
         session.user.organizationId = token.organizationId as string | undefined;
-        session.user.orgRole = token.orgRole as import('@/generated/prisma/client').UserRole | undefined;
+        session.user.orgRole = token.orgRole as
+          | import('@/generated/prisma/client').UserRole
+          | undefined;
       }
       return session;
     },

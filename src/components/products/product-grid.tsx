@@ -31,7 +31,10 @@ export function ProductGrid({ initialLayer, initialCategory, organizationId }: P
   const [quoteProductId, setQuoteProductId] = useState<string | undefined>(undefined);
   const [quoteDialogOpen, setQuoteDialogOpen] = useState(false);
 
-  const layerFilter = activeLayer === 'ALL' ? undefined : (activeLayer as 'RUIMTE_INRICHTING' | 'WERKWIJZE_PROCESSEN' | 'ORGANISATIE_BESTURING');
+  const layerFilter =
+    activeLayer === 'ALL'
+      ? undefined
+      : (activeLayer as 'RUIMTE_INRICHTING' | 'WERKWIJZE_PROCESSEN' | 'ORGANISATIE_BESTURING');
 
   const { data, isLoading } = trpc.products.list.useQuery({
     layer: layerFilter,

@@ -12,9 +12,8 @@ export default function PhotosPage({ params }: { params: Promise<{ scanId: strin
   const { scanId } = use(params);
   const { data: scan } = trpc.quickscan.getById.useQuery({ scanId });
 
-  const allPhotos = scan?.findings.flatMap((f) =>
-    f.photoUrls.map((url) => ({ url, findingTitle: f.title }))
-  ) ?? [];
+  const allPhotos =
+    scan?.findings.flatMap((f) => f.photoUrls.map((url) => ({ url, findingTitle: f.title }))) ?? [];
 
   return (
     <div className="space-y-6">
@@ -38,7 +37,13 @@ export default function PhotosPage({ params }: { params: Promise<{ scanId: strin
           {allPhotos.map((photo, i) => (
             <Card key={i}>
               <CardContent className="p-2">
-                <Image src={photo.url} alt={photo.findingTitle} width={400} height={400} className="w-full rounded-md object-cover aspect-square" />
+                <Image
+                  src={photo.url}
+                  alt={photo.findingTitle}
+                  width={400}
+                  height={400}
+                  className="w-full rounded-md object-cover aspect-square"
+                />
                 <p className="mt-2 text-xs text-muted-foreground truncate">{photo.findingTitle}</p>
               </CardContent>
             </Card>

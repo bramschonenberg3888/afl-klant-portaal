@@ -1,12 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import {
-  createTRPCRouter,
-  authedProcedure,
-  orgMemberProcedure,
-  orgAdminProcedure,
-} from '../init';
+import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 export const actionsRouter = createTRPCRouter({
   /** List actions with filters */
@@ -17,14 +12,17 @@ export const actionsRouter = createTRPCRouter({
         status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'DEFERRED', 'CANCELLED']).optional(),
         priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
         assigneeId: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         perspective: z.enum(['EFFICIENT', 'VEILIG']).optional(),
         cursor: z.string().optional(),
         limit: z.number().min(1).max(100).default(50),
       })
     )
     .query(async ({ input }) => {
-      const { organizationId, status, priority, assigneeId, layer, perspective, cursor, limit } = input;
+      const { organizationId, status, priority, assigneeId, layer, perspective, cursor, limit } =
+        input;
 
       const actions = await db.action.findMany({
         where: {
@@ -55,29 +53,27 @@ export const actionsRouter = createTRPCRouter({
     }),
 
   /** Get action by id with comments */
-  getById: authedProcedure
-    .input(z.object({ actionId: z.string() }))
-    .query(async ({ input }) => {
-      const action = await db.action.findUnique({
-        where: { id: input.actionId },
-        include: {
-          assignee: true,
-          reporter: true,
-          finding: { include: { cell: true } },
-          comments: {
-            include: { author: true },
-            orderBy: { createdAt: 'asc' },
-          },
-          organization: true,
+  getById: authedProcedure.input(z.object({ actionId: z.string() })).query(async ({ input }) => {
+    const action = await db.action.findUnique({
+      where: { id: input.actionId },
+      include: {
+        assignee: true,
+        reporter: true,
+        finding: { include: { cell: true } },
+        comments: {
+          include: { author: true },
+          orderBy: { createdAt: 'asc' },
         },
-      });
+        organization: true,
+      },
+    });
 
-      if (!action) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
-      }
+    if (!action) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+    }
 
-      return action;
-    }),
+    return action;
+  }),
 
   /** Create an action */
   create: orgMemberProcedure
@@ -86,7 +82,9 @@ export const actionsRouter = createTRPCRouter({
         organizationId: z.string(),
         title: z.string().min(1),
         description: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         perspective: z.enum(['EFFICIENT', 'VEILIG']).optional(),
         priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
         assigneeId: z.string().optional(),
@@ -114,7 +112,9 @@ export const actionsRouter = createTRPCRouter({
         actionId: z.string(),
         title: z.string().min(1).optional(),
         description: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         perspective: z.enum(['EFFICIENT', 'VEILIG']).optional(),
         priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
         assigneeId: z.string().nullable().optional(),

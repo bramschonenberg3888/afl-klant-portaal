@@ -58,7 +58,9 @@ function formatDate(date: Date | string): string {
   });
 }
 
-function getExpiryStatus(expiresAt: Date | string | null | undefined): 'expired' | 'warning' | null {
+function getExpiryStatus(
+  expiresAt: Date | string | null | undefined
+): 'expired' | 'warning' | null {
   if (!expiresAt) return null;
   const now = new Date();
   const expiry = new Date(expiresAt);
@@ -151,7 +153,9 @@ export function DocumentCard({ document }: DocumentCardProps) {
                 )}
               >
                 <AlertTriangle className="h-3 w-3" />
-                {expiryStatus === 'expired' ? 'Verlopen' : (
+                {expiryStatus === 'expired' ? (
+                  'Verlopen'
+                ) : (
                   <>
                     <Clock className="h-3 w-3" />
                     Verloopt {formatDate(document.expiresAt!)}

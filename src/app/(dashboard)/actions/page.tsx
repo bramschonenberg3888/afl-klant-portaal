@@ -31,7 +31,9 @@ export default function ActionsPage() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">Acties</h1>
-          <p className="text-muted-foreground">Beheer en volg verbeteracties voor uw organisatie.</p>
+          <p className="text-muted-foreground">
+            Beheer en volg verbeteracties voor uw organisatie.
+          </p>
         </div>
         <Button asChild>
           <Link href="/actions/new">

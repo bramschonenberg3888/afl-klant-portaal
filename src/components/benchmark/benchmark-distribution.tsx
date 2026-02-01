@@ -1,6 +1,11 @@
 'use client';
 
-import { layerLabels, perspectiveLabels, layers, perspectives } from '@/components/quickscan/matrix-grid';
+import {
+  layerLabels,
+  perspectiveLabels,
+  layers,
+  perspectives,
+} from '@/components/quickscan/matrix-grid';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Layer, Perspective, RAGScore } from '@/generated/prisma/client';
 
@@ -16,7 +21,13 @@ interface BenchmarkDistributionProps {
   cells: BenchmarkCell[];
 }
 
-function DistributionBar({ distribution, total }: { distribution: Record<RAGScore, number>; total: number }) {
+function DistributionBar({
+  distribution,
+  total,
+}: {
+  distribution: Record<RAGScore, number>;
+  total: number;
+}) {
   if (total === 0) {
     return (
       <div className="flex h-7 items-center justify-center rounded-md bg-gray-100 text-xs text-muted-foreground">
@@ -94,7 +105,10 @@ export function BenchmarkDistribution({ cells }: BenchmarkDistributionProps) {
                   const cell = getCell(layer, perspective);
 
                   return (
-                    <div key={`${layer}-${perspective}`} className="space-y-2 rounded-lg border p-3">
+                    <div
+                      key={`${layer}-${perspective}`}
+                      className="space-y-2 rounded-lg border p-3"
+                    >
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">
                           {perspectiveLabels[perspective]}

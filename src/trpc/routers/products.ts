@@ -1,12 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import {
-  createTRPCRouter,
-  baseProcedure,
-  authedProcedure,
-  globalAdminProcedure,
-} from '../init';
+import { createTRPCRouter, baseProcedure, authedProcedure, globalAdminProcedure } from '../init';
 
 export const productsRouter = createTRPCRouter({
   /** List products with filters */
@@ -14,7 +9,9 @@ export const productsRouter = createTRPCRouter({
     .input(
       z.object({
         category: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         search: z.string().optional(),
         cursor: z.string().optional(),
         limit: z.number().min(1).max(100).default(50),
@@ -50,24 +47,22 @@ export const productsRouter = createTRPCRouter({
     }),
 
   /** Get product by id */
-  getById: authedProcedure
-    .input(z.object({ productId: z.string() }))
-    .query(async ({ input }) => {
-      const product = await db.product.findUnique({
-        where: { id: input.productId },
-        include: {
-          recommendations: {
-            include: { finding: true, action: true },
-          },
+  getById: authedProcedure.input(z.object({ productId: z.string() })).query(async ({ input }) => {
+    const product = await db.product.findUnique({
+      where: { id: input.productId },
+      include: {
+        recommendations: {
+          include: { finding: true, action: true },
         },
-      });
+      },
+    });
 
-      if (!product) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Product not found' });
-      }
+    if (!product) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Product not found' });
+    }
 
-      return product;
-    }),
+    return product;
+  }),
 
   /** Get product recommendations for a scan */
   getRecommendationsForScan: authedProcedure
@@ -137,7 +132,9 @@ export const productsRouter = createTRPCRouter({
         description: z.string().optional(),
         sku: z.string().optional(),
         category: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         imageUrl: z.string().url().optional(),
         productUrl: z.string().url().optional(),
         priceRange: z.string().optional(),
@@ -156,7 +153,9 @@ export const productsRouter = createTRPCRouter({
         description: z.string().optional(),
         sku: z.string().optional(),
         category: z.string().optional(),
-        layer: z.enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING']).optional(),
+        layer: z
+          .enum(['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'])
+          .optional(),
         imageUrl: z.string().url().optional(),
         productUrl: z.string().url().optional(),
         priceRange: z.string().optional(),

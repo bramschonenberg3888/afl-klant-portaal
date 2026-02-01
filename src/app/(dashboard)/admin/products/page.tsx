@@ -229,10 +229,7 @@ export default function AdminProductsPage() {
                       {product.layer ? (
                         <Badge
                           variant="outline"
-                          className={cn(
-                            'border-transparent text-xs',
-                            LAYER_COLORS[product.layer]
-                          )}
+                          className={cn('border-transparent text-xs', LAYER_COLORS[product.layer])}
                         >
                           {LAYER_LABELS[product.layer] ?? product.layer}
                         </Badge>
@@ -248,9 +245,7 @@ export default function AdminProductsPage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <span className="text-sm text-muted-foreground">
-                        {product.sku || '-'}
-                      </span>
+                      <span className="text-sm text-muted-foreground">{product.sku || '-'}</span>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
@@ -282,9 +277,7 @@ export default function AdminProductsPage() {
       <Dialog open={dialogOpen} onOpenChange={(isOpen) => !isOpen && handleCloseDialog()}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>
-              {editProductId ? 'Product Bewerken' : 'Nieuw Product'}
-            </DialogTitle>
+            <DialogTitle>{editProductId ? 'Product Bewerken' : 'Nieuw Product'}</DialogTitle>
             <DialogDescription>
               {editProductId
                 ? 'Pas de productgegevens aan.'
@@ -387,10 +380,7 @@ export default function AdminProductsPage() {
               <Button type="button" variant="outline" onClick={handleCloseDialog}>
                 Annuleren
               </Button>
-              <Button
-                type="submit"
-                disabled={createProduct.isPending || updateProduct.isPending}
-              >
+              <Button type="submit" disabled={createProduct.isPending || updateProduct.isPending}>
                 {createProduct.isPending || updateProduct.isPending
                   ? 'Opslaan...'
                   : editProductId

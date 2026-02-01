@@ -29,23 +29,16 @@ export function DocumentList({ organizationId }: DocumentListProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: categoryCounts, isLoading: countsLoading } =
-    trpc.clientDocuments.getByCategory.useQuery(
-      { organizationId },
-      { enabled: !!organizationId }
-    );
+    trpc.clientDocuments.getByCategory.useQuery({ organizationId }, { enabled: !!organizationId });
 
-  const { data: documentsData, isLoading: docsLoading } =
-    trpc.clientDocuments.list.useQuery(
-      {
-        organizationId,
-        category:
-          activeCategory === 'ALL'
-            ? undefined
-            : (activeCategory as DocumentCategory),
-        search: searchQuery || undefined,
-      },
-      { enabled: !!organizationId }
-    );
+  const { data: documentsData, isLoading: docsLoading } = trpc.clientDocuments.list.useQuery(
+    {
+      organizationId,
+      category: activeCategory === 'ALL' ? undefined : (activeCategory as DocumentCategory),
+      search: searchQuery || undefined,
+    },
+    { enabled: !!organizationId }
+  );
 
   const countMap = new Map<string, number>();
   let totalCount = 0;
@@ -75,9 +68,7 @@ export function DocumentList({ organizationId }: DocumentListProps) {
           <TabsTrigger value="ALL">
             Alle
             {!countsLoading && (
-              <span className="ml-1 text-xs text-muted-foreground">
-                ({totalCount})
-              </span>
+              <span className="ml-1 text-xs text-muted-foreground">({totalCount})</span>
             )}
           </TabsTrigger>
           {ALL_CATEGORIES.map((cat) => {
@@ -87,9 +78,7 @@ export function DocumentList({ organizationId }: DocumentListProps) {
               <TabsTrigger key={cat} value={cat}>
                 {CATEGORY_LABELS[cat]}
                 {!countsLoading && (
-                  <span className="ml-1 text-xs text-muted-foreground">
-                    ({count})
-                  </span>
+                  <span className="ml-1 text-xs text-muted-foreground">({count})</span>
                 )}
               </TabsTrigger>
             );

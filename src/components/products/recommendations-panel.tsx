@@ -23,7 +23,11 @@ interface RecommendationsPanelProps {
   organizationId?: string;
 }
 
-export function RecommendationsPanel({ scanId, actionId, organizationId }: RecommendationsPanelProps) {
+export function RecommendationsPanel({
+  scanId,
+  actionId,
+  organizationId,
+}: RecommendationsPanelProps) {
   const [quoteProductId, setQuoteProductId] = useState<string | undefined>(undefined);
   const [quoteDialogOpen, setQuoteDialogOpen] = useState(false);
 
@@ -114,11 +118,16 @@ export function RecommendationsPanel({ scanId, actionId, organizationId }: Recom
                 {rec.context && (
                   <p className="text-xs text-muted-foreground line-clamp-2">{rec.context}</p>
                 )}
-                {scanId && (rec as { finding?: { title?: string; description?: string } }).finding && (
-                  <p className="text-xs text-muted-foreground line-clamp-1">
-                    Bevinding: {(rec as { finding?: { title?: string; description?: string } }).finding!.title ?? (rec as { finding?: { title?: string; description?: string } }).finding!.description}
-                  </p>
-                )}
+                {scanId &&
+                  (rec as { finding?: { title?: string; description?: string } }).finding && (
+                    <p className="text-xs text-muted-foreground line-clamp-1">
+                      Bevinding:{' '}
+                      {(rec as { finding?: { title?: string; description?: string } }).finding!
+                        .title ??
+                        (rec as { finding?: { title?: string; description?: string } }).finding!
+                          .description}
+                    </p>
+                  )}
                 {rec.product.priceRange && (
                   <p className="text-xs font-medium text-primary">{rec.product.priceRange}</p>
                 )}

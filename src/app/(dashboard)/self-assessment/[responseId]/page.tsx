@@ -7,7 +7,11 @@ import { trpc } from '@/trpc/client';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-export default function AssessmentWizardPage({ params }: { params: Promise<{ responseId: string }> }) {
+export default function AssessmentWizardPage({
+  params,
+}: {
+  params: Promise<{ responseId: string }>;
+}) {
   const { responseId } = use(params);
   const { data: template, isLoading } = trpc.assessment.getActiveTemplate.useQuery();
 

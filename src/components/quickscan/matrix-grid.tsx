@@ -49,9 +49,20 @@ export function MatrixGrid({ cells, scanId, compact = false, linkPrefix }: Matri
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className={cn('text-left font-medium text-muted-foreground', compact ? 'p-1.5 text-xs' : 'p-3 text-sm')} />
+            <th
+              className={cn(
+                'text-left font-medium text-muted-foreground',
+                compact ? 'p-1.5 text-xs' : 'p-3 text-sm'
+              )}
+            />
             {perspectives.map((p) => (
-              <th key={p} className={cn('text-center font-semibold', compact ? 'p-1.5 text-xs' : 'p-3 text-sm')}>
+              <th
+                key={p}
+                className={cn(
+                  'text-center font-semibold',
+                  compact ? 'p-1.5 text-xs' : 'p-3 text-sm'
+                )}
+              >
                 {perspectiveLabels[p]}
               </th>
             ))}
@@ -84,7 +95,10 @@ export function MatrixGrid({ cells, scanId, compact = false, linkPrefix }: Matri
                 );
 
                 return (
-                  <td key={`${layer}-${perspective}`} className={cn('border rounded-lg', bg, compact ? 'p-0.5' : 'p-1')}>
+                  <td
+                    key={`${layer}-${perspective}`}
+                    className={cn('border rounded-lg', bg, compact ? 'p-0.5' : 'p-1')}
+                  >
                     {href ? (
                       <Link href={href} className="block rounded-md transition-colors">
                         {content}

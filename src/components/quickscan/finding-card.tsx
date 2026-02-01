@@ -22,7 +22,14 @@ interface FindingCardProps {
   photoUrls?: string[];
 }
 
-export function FindingCard({ title, description, efficiencyImpact, safetyImpact, recommendation, photoUrls }: FindingCardProps) {
+export function FindingCard({
+  title,
+  description,
+  efficiencyImpact,
+  safetyImpact,
+  recommendation,
+  photoUrls,
+}: FindingCardProps) {
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -34,13 +41,19 @@ export function FindingCard({ title, description, efficiencyImpact, safetyImpact
         <div className="flex flex-wrap gap-2">
           <div className="flex items-center gap-1.5">
             <span className="text-xs text-muted-foreground">Efficiëntie:</span>
-            <Badge variant="outline" className={cn('text-xs', impactConfig[efficiencyImpact].className)}>
+            <Badge
+              variant="outline"
+              className={cn('text-xs', impactConfig[efficiencyImpact].className)}
+            >
               {impactConfig[efficiencyImpact].label}
             </Badge>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-xs text-muted-foreground">Veiligheid:</span>
-            <Badge variant="outline" className={cn('text-xs', impactConfig[safetyImpact].className)}>
+            <Badge
+              variant="outline"
+              className={cn('text-xs', impactConfig[safetyImpact].className)}
+            >
               {impactConfig[safetyImpact].label}
             </Badge>
           </div>
@@ -56,7 +69,14 @@ export function FindingCard({ title, description, efficiencyImpact, safetyImpact
         {photoUrls && photoUrls.length > 0 && (
           <div className="flex gap-2 overflow-x-auto">
             {photoUrls.map((url, i) => (
-              <Image key={i} src={url} alt={`Foto ${i + 1}`} width={80} height={80} className="h-20 w-20 rounded-md object-cover" />
+              <Image
+                key={i}
+                src={url}
+                alt={`Foto ${i + 1}`}
+                width={80}
+                height={80}
+                className="h-20 w-20 rounded-md object-cover"
+              />
             ))}
           </div>
         )}

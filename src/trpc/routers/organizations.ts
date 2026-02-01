@@ -46,10 +46,12 @@ export const organizationsRouter = createTRPCRouter({
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Not a member of this organization' });
       }
 
-      const org = membership?.organization ?? await db.organization.findUnique({
-        where: { id: input.organizationId },
-        include: { users: { include: { user: true } } },
-      });
+      const org =
+        membership?.organization ??
+        (await db.organization.findUnique({
+          where: { id: input.organizationId },
+          include: { users: { include: { user: true } } },
+        }));
 
       if (!org) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Organization not found' });
@@ -63,7 +65,10 @@ export const organizationsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1),
-        slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
+        slug: z
+          .string()
+          .min(1)
+          .regex(/^[a-z0-9-]+$/),
         address: z.string().optional(),
         city: z.string().optional(),
         postalCode: z.string().optional(),

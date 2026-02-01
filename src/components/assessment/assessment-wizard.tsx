@@ -36,7 +36,11 @@ interface AssessmentWizardProps {
   basePath?: string;
 }
 
-export function AssessmentWizard({ templateId, responseId, basePath = '/self-assessment' }: AssessmentWizardProps) {
+export function AssessmentWizard({
+  templateId,
+  responseId,
+  basePath = '/self-assessment',
+}: AssessmentWizardProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
@@ -56,9 +60,7 @@ export function AssessmentWizard({ templateId, responseId, basePath = '/self-ass
   const questions = template?.questions ?? [];
 
   // Group questions by layer
-  const questionsByLayer = layerOrder.map((layer) =>
-    questions.filter((q) => q.layer === layer)
-  );
+  const questionsByLayer = layerOrder.map((layer) => questions.filter((q) => q.layer === layer));
 
   const currentLayerQuestions = questionsByLayer[currentStep] ?? [];
   const totalSteps = layerOrder.length;
@@ -133,7 +135,8 @@ export function AssessmentWizard({ templateId, responseId, basePath = '/self-ass
 
   // Overall progress
   const totalAnswered = questions.filter((q) => answers[q.id]?.score != null).length;
-  const progressPercent = questions.length > 0 ? Math.round((totalAnswered / questions.length) * 100) : 0;
+  const progressPercent =
+    questions.length > 0 ? Math.round((totalAnswered / questions.length) * 100) : 0;
 
   if (isLoading) {
     return (
@@ -200,19 +203,17 @@ export function AssessmentWizard({ templateId, responseId, basePath = '/self-ass
                     : 'border-border hover:border-primary/30'
               )}
             >
-              <span className={cn(
-                'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold',
-                isCurrent
-                  ? 'bg-primary text-primary-foreground'
-                  : isComplete
-                    ? 'bg-green-500 text-white'
-                    : 'bg-muted text-muted-foreground'
-              )}>
-                {isComplete ? (
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                ) : (
-                  index + 1
+              <span
+                className={cn(
+                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold',
+                  isCurrent
+                    ? 'bg-primary text-primary-foreground'
+                    : isComplete
+                      ? 'bg-green-500 text-white'
+                      : 'bg-muted text-muted-foreground'
                 )}
+              >
+                {isComplete ? <CheckCircle2 className="h-3.5 w-3.5" /> : index + 1}
               </span>
               <div className="hidden min-w-0 sm:block">
                 <p className={cn('truncate font-medium', isCurrent && 'text-primary')}>
@@ -256,11 +257,7 @@ export function AssessmentWizard({ templateId, responseId, basePath = '/self-ass
 
       {/* Navigation buttons */}
       <div className="flex items-center justify-between pt-4">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentStep === 0}
-        >
+        <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 0}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Vorige
         </Button>
@@ -271,10 +268,7 @@ export function AssessmentWizard({ templateId, responseId, basePath = '/self-ass
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
-          <Button
-            onClick={handleComplete}
-            disabled={!allAnswered || isCompleting}
-          >
+          <Button onClick={handleComplete} disabled={!allAnswered || isCompleting}>
             {isCompleting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -59,7 +59,9 @@ export function RoadmapView({ items }: RoadmapViewProps) {
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm">{item.title}</p>
                       {item.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{item.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                          {item.description}
+                        </p>
                       )}
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
@@ -75,7 +77,10 @@ export function RoadmapView({ items }: RoadmapViewProps) {
                           {format(new Date(item.dueDate), 'd MMM', { locale: nl })}
                         </div>
                       )}
-                      <Badge variant="outline" className={cn('text-xs', statusConfig[item.status].className)}>
+                      <Badge
+                        variant="outline"
+                        className={cn('text-xs', statusConfig[item.status].className)}
+                      >
                         {statusConfig[item.status].label}
                       </Badge>
                     </div>

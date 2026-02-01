@@ -1,12 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import {
-  createTRPCRouter,
-  baseProcedure,
-  authedProcedure,
-  orgMemberProcedure,
-} from '../init';
+import { createTRPCRouter, baseProcedure, authedProcedure, orgMemberProcedure } from '../init';
 import type { RAGScore } from '@/generated/prisma/client';
 
 function computeRAGScore(rawScore: number): RAGScore {
@@ -179,18 +174,16 @@ export const assessmentRouter = createTRPCRouter({
     }),
 
   /** Get assessment result */
-  getResult: baseProcedure
-    .input(z.object({ responseId: z.string() }))
-    .query(async ({ input }) => {
-      return db.assessmentResponse.findUnique({
-        where: { id: input.responseId },
-        include: {
-          resultCells: true,
-          answers: { include: { question: true } },
-          template: true,
-        },
-      });
-    }),
+  getResult: baseProcedure.input(z.object({ responseId: z.string() })).query(async ({ input }) => {
+    return db.assessmentResponse.findUnique({
+      where: { id: input.responseId },
+      include: {
+        resultCells: true,
+        answers: { include: { question: true } },
+        template: true,
+      },
+    });
+  }),
 
   /** Get user's assessments */
   getMyAssessments: authedProcedure.query(async ({ ctx }) => {

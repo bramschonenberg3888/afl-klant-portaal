@@ -31,13 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/trpc/client';
 
@@ -109,9 +103,7 @@ function OrgSwitcher() {
             className="flex items-center justify-between"
           >
             {org.name}
-            {org.id === session?.user?.organizationId && (
-              <Check className="h-4 w-4" />
-            )}
+            {org.id === session?.user?.organizationId && <Check className="h-4 w-4" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -160,15 +152,14 @@ export function DashboardHeader() {
       {/* Desktop nav */}
       <nav className="hidden items-center gap-1 md:flex">
         {navItems.map((item) => {
-          const isActive =
-            item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
                 'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white',
-                isActive && 'bg-white/15 text-white',
+                isActive && 'bg-white/15 text-white'
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -226,11 +217,7 @@ export function DashboardHeader() {
         {/* Mobile hamburger */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/10 md:hidden"
-            >
+            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 md:hidden">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Menu openen</span>
             </Button>
@@ -257,7 +244,7 @@ export function DashboardHeader() {
                     href={item.href}
                     className={cn(
                       'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white',
-                      isActive && 'bg-white/15 text-white',
+                      isActive && 'bg-white/15 text-white'
                     )}
                   >
                     <item.icon className="h-5 w-5" />
