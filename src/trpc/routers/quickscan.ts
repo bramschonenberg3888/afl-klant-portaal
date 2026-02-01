@@ -16,7 +16,7 @@ export const quickscanRouter = createTRPCRouter({
         orderBy: { scanDate: 'desc' },
         include: {
           cells: { include: { findings: true } },
-          findings: true,
+          findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
           roadmapItems: { include: { owner: true }, orderBy: { priority: 'desc' } },
           consultant: true,
           accountManager: true,
@@ -47,59 +47,6 @@ export const quickscanRouter = createTRPCRouter({
 
     return scan;
   }),
-
-  /** List scans for an org */
-  listForOrg: orgMemberProcedure
-    .input(
-      z.object({
-        organizationId: z.string(),
-        cursor: z.string().optional(),
-        limit: z.number().min(1).max(50).default(20),
-      })
-    )
-    .query(async ({ input }) => {
-      const scans = await db.quickScan.findMany({
-        where: { organizationId: input.organizationId },
-        orderBy: { scanDate: 'desc' },
-        take: input.limit + 1,
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        include: {
-          cells: true,
-          consultant: true,
-          _count: { select: { findings: true, roadmapItems: true } },
-        },
-      });
-
-      let nextCursor: string | undefined;
-      if (scans.length > input.limit) {
-        const next = scans.pop();
-        nextCursor = next?.id;
-      }
-
-      return { scans, nextCursor };
-    }),
-
-  /** Compare two scans side-by-side */
-  compareTwoScans: authedProcedure
-    .input(z.object({ scanIdA: z.string(), scanIdB: z.string() }))
-    .query(async ({ input }) => {
-      const [scanA, scanB] = await Promise.all([
-        db.quickScan.findUnique({
-          where: { id: input.scanIdA },
-          include: { cells: true },
-        }),
-        db.quickScan.findUnique({
-          where: { id: input.scanIdB },
-          include: { cells: true },
-        }),
-      ]);
-
-      if (!scanA || !scanB) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'One or both scans not found' });
-      }
-
-      return { scanA, scanB };
-    }),
 
   /** Get roadmap items with filters */
   getRoadmap: orgMemberProcedure
@@ -235,6 +182,42 @@ export const quickscanRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       await db.scanFinding.delete({ where: { id: input.findingId } });
       return { success: true };
+    }),
+
+  /** Update finding priority scores (impact & effort for prioriteitenmatrix) */
+  updateFindingPriority: orgAdminProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        findingId: z.string(),
+        impactScore: z.number().min(1).max(5),
+        effortScore: z.number().min(1).max(5),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return db.scanFinding.update({
+        where: { id: input.findingId },
+        data: {
+          impactScore: input.impactScore,
+          effortScore: input.effortScore,
+        },
+      });
+    }),
+
+  /** Update management summary */
+  updateManagementSummary: orgAdminProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        scanId: z.string(),
+        managementSummary: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return db.quickScan.update({
+        where: { id: input.scanId },
+        data: { managementSummary: input.managementSummary },
+      });
     }),
 
   /** Add a roadmap item */

@@ -103,7 +103,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
 
   const deleteAction = trpc.actions.delete.useMutation({
     onSuccess: () => {
-      router.push('/actions');
+      router.push('/quick-scan?tab=acties');
     },
   });
 
@@ -129,7 +129,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
       <div className="flex flex-col items-center justify-center py-24 gap-4">
         <p className="text-muted-foreground">Actie niet gevonden</p>
         <Button variant="outline" asChild>
-          <Link href="/actions">
+          <Link href="/quick-scan?tab=acties">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Terug naar acties
           </Link>
@@ -181,7 +181,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/actions">
+          <Link href="/quick-scan?tab=acties">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Terug
           </Link>

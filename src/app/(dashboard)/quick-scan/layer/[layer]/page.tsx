@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import { useSession } from 'next-auth/react';
 import { trpc } from '@/trpc/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,11 +21,18 @@ const layerMap: Record<string, Layer> = {
 export default function LayerDetailPage({
   params,
 }: {
-  params: Promise<{ scanId: string; layer: string }>;
+  params: Promise<{ layer: string }>;
 }) {
-  const { scanId, layer: layerParam } = use(params);
+  const { layer: layerParam } = use(params);
+  const { data: session } = useSession();
+  const orgId = session?.user?.organizationId;
+
+  const { data: scan } = trpc.quickscan.getLatest.useQuery(
+    { organizationId: orgId! },
+    { enabled: !!orgId }
+  );
+
   const layerEnum = layerMap[layerParam];
-  const { data: scan } = trpc.quickscan.getById.useQuery({ scanId });
 
   if (!layerEnum) {
     return <p className="text-center py-12 text-muted-foreground">Ongeldige laag</p>;
@@ -40,7 +48,7 @@ export default function LayerDetailPage({
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link href={`/quick-scan/${scanId}`}>
+          <Link href="/quick-scan">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Terug
           </Link>
@@ -53,7 +61,7 @@ export default function LayerDetailPage({
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Efficiënt</CardTitle>
+              <CardTitle className="text-base">Effici&euml;nt</CardTitle>
               <RAGBadge score={efficiencyCell?.score} />
             </div>
           </CardHeader>

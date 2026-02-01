@@ -1,6 +1,6 @@
 # AFL Klant Portaal - Warehouse Safety Portal
 
-Multi-tenant warehouse safety compliance portal with AI chatbot for Logistiekconcurrent.nl customers. Features QuickScan dashboards, action tracking, document management, self-assessments, product recommendations, and benchmarking — all built around a 3x2 matrix (Layer x Perspective) with RAG scoring.
+Multi-tenant warehouse safety compliance portal with AI chatbot for Logistiekconcurrent.nl customers. Built around a tabbed QuickScan hub with 3x2 matrix (Layer x Perspective), RAG scoring, priority matrix, action tracking, document management, consultant-initiated evaluations, product recommendations, and benchmarking.
 
 ## Project Structure
 
@@ -14,19 +14,23 @@ src/
 │   │   └── upload/             # File upload (Vercel Blob)
 │   ├── (auth)/                 # Auth pages (login)
 │   ├── (dashboard)/            # Protected dashboard routes
-│   │   ├── quick-scan/         # QuickScan matrix, findings, roadmap
-│   │   ├── actions/            # Action tracker (list + kanban)
+│   │   ├── quick-scan/         # QuickScan hub (tabbed: dashboard, samenvatting,
+│   │   │   └── layer/[layer]/  #   bevindingen, prioriteiten, routekaart, acties)
+│   │   ├── actions/            # Redirects → /quick-scan?tab=acties
+│   │   │   ├── [actionId]/     # Action detail (back → /quick-scan?tab=acties)
+│   │   │   └── new/            # Create action (back → /quick-scan?tab=acties)
 │   │   ├── documents/          # Document hub (categories, versions)
-│   │   ├── self-assessment/    # Self-assessment wizard + results
+│   │   ├── self-assessment/    # Consultant-initiated evaluation (read-only start)
 │   │   ├── products/           # Product catalog + recommendations
 │   │   ├── benchmark/          # Cross-org benchmarking
-│   │   ├── admin/              # Admin (scans, products, quotes)
+│   │   ├── admin/              # Admin (scans, products, quotes, evaluations)
+│   │   │   └── evaluations/    # Create/manage evaluations per org
 │   │   ├── chat/               # AI chat interface
 │   │   └── settings/           # User settings
 │   └── assessment/             # Public assessment (lead gen, no auth)
 ├── components/                 # React components, grouped by feature
 │   ├── ui/                     # shadcn/ui base components
-│   ├── quickscan/              # Matrix grid, RAG badge, findings, roadmap
+│   ├── quickscan/              # QuickScan hub, tabs, matrix, priority matrix, findings
 │   ├── actions/                # Action board, cards, filters, stats
 │   ├── documents/              # Document list, upload, expiry alerts
 │   ├── assessment/             # Wizard, question card, result, lead form
@@ -49,10 +53,10 @@ src/
 │   ├── init.ts                 # Context, middleware chain (auth → org → admin)
 │   ├── routers/                # 10 domain routers
 │   │   ├── _app.ts             # Root router
-│   │   ├── quickscan.ts        # QuickScan CRUD + publish
+│   │   ├── quickscan.ts        # QuickScan CRUD, priority scores, management summary
 │   │   ├── actions.ts          # Action management + kanban
 │   │   ├── client-documents.ts # Document hub
-│   │   ├── assessment.ts       # Self-assessment + scoring
+│   │   ├── assessment.ts       # Consultant-initiated evaluations + public assessment
 │   │   ├── products.ts         # Products + quotes
 │   │   ├── benchmark.ts        # Benchmark generation
 │   │   ├── organizations.ts    # Multi-tenancy
@@ -79,6 +83,9 @@ tests/                          # E2E tests (Playwright)
 - **Unused variables**: Prefix with `_` (ESLint configured to allow `_`-prefixed vars)
 - **Shared 3x2 matrix**: `src/components/quickscan/matrix-grid.tsx` — reused across features
 - **RAG scoring**: ROOD (< 2.0), ORANJE (2.0–3.5), GROEN (> 3.5)
+- **QuickScan hub**: One mutable scan per org, no versioning — accessed via `/quick-scan` with `?tab=` param
+- **Actions routing**: `/actions` redirects to `/quick-scan?tab=acties`; action detail/create pages link back there
+- **Evaluations**: Consultant-initiated only via admin; clients see pending or completed evaluations
 
 ## Organization Rules
 

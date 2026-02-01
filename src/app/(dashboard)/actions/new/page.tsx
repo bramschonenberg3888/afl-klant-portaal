@@ -29,7 +29,7 @@ export default function NewActionPage() {
 
   const createAction = trpc.actions.create.useMutation({
     onSuccess: () => {
-      router.push('/actions');
+      router.push('/quick-scan?tab=acties');
     },
   });
 
@@ -61,7 +61,7 @@ export default function NewActionPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/actions">
+          <Link href="/quick-scan?tab=acties">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Terug
           </Link>
@@ -165,7 +165,7 @@ export default function NewActionPage() {
                 {createAction.isPending ? 'Aanmaken...' : 'Opslaan'}
               </Button>
               <Button type="button" variant="outline" asChild>
-                <Link href="/actions">Annuleren</Link>
+                <Link href="/quick-scan?tab=acties">Annuleren</Link>
               </Button>
             </div>
           </form>

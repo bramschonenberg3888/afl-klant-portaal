@@ -1,7 +1,13 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import { createTRPCRouter, baseProcedure, authedProcedure, orgMemberProcedure } from '../init';
+import {
+  createTRPCRouter,
+  baseProcedure,
+  authedProcedure,
+  orgMemberProcedure,
+  orgAdminProcedure,
+} from '../init';
 import type { RAGScore } from '@/generated/prisma/client';
 
 function computeRAGScore(rawScore: number): RAGScore {
@@ -21,21 +27,37 @@ export const assessmentRouter = createTRPCRouter({
     });
   }),
 
-  /** Start a new assessment */
-  startAssessment: baseProcedure
+  /** Start a new assessment (consultant/admin initiated for an org) */
+  startAssessment: orgAdminProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        templateId: z.string(),
+        userId: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return db.assessmentResponse.create({
+        data: {
+          templateId: input.templateId,
+          userId: input.userId,
+          organizationId: input.organizationId,
+          createdById: ctx.userId,
+        },
+      });
+    }),
+
+  /** Start a public assessment (no auth, for lead generation) */
+  startPublicAssessment: baseProcedure
     .input(
       z.object({
         templateId: z.string(),
-        userId: z.string().optional(),
-        organizationId: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
       return db.assessmentResponse.create({
         data: {
           templateId: input.templateId,
-          userId: input.userId,
-          organizationId: input.organizationId,
         },
       });
     }),
@@ -201,7 +223,21 @@ export const assessmentRouter = createTRPCRouter({
       return db.assessmentResponse.findMany({
         where: { organizationId: input.organizationId },
         orderBy: { createdAt: 'desc' },
-        include: { resultCells: true, template: true, user: true },
+        include: { resultCells: true, template: true, user: true, createdBy: true },
+      });
+    }),
+
+  /** Get assessments created by consultants for an org */
+  getConsultantAssessments: orgAdminProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ input }) => {
+      return db.assessmentResponse.findMany({
+        where: {
+          organizationId: input.organizationId,
+          createdById: { not: null },
+        },
+        orderBy: { createdAt: 'desc' },
+        include: { resultCells: true, template: true, user: true, createdBy: true },
       });
     }),
 });

@@ -12,7 +12,7 @@ export default function PublicAssessmentPage() {
   const [starting, setStarting] = useState(false);
 
   const { data: template, isLoading } = trpc.assessment.getActiveTemplate.useQuery();
-  const startMutation = trpc.assessment.startAssessment.useMutation({
+  const startMutation = trpc.assessment.startPublicAssessment.useMutation({
     onSuccess: (response) => {
       router.push(`/assessment/${response.id}`);
     },

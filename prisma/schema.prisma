@@ -164,6 +164,7 @@ model User {
 
   // Assessment relations
   assessmentResponses AssessmentResponse[]
+  createdAssessments  AssessmentResponse[] @relation("CreatedAssessments")
 
   // Product relations
   quoteRequests QuoteRequest[]
@@ -292,18 +293,19 @@ model Message {
 // ─── QuickScan ──────────────────────────────────────────────────────────────
 
 model QuickScan {
-  id               String     @id @default(cuid())
-  organizationId   String
-  consultantId     String?
-  accountManagerId String?
-  title            String
-  scanDate         DateTime   @default(now())
-  status           ScanStatus @default(DRAFT)
+  id                String     @id @default(cuid())
+  organizationId    String
+  consultantId      String?
+  accountManagerId  String?
+  title             String
+  scanDate          DateTime   @default(now())
+  status            ScanStatus @default(DRAFT)
   overallEfficiency RAGScore?
-  overallSafety    RAGScore?
-  summary          String?    @db.Text
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  overallSafety     RAGScore?
+  summary           String?    @db.Text
+  managementSummary String?    @db.Text
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   consultant     User?        @relation("ConsultantScans", fields: [consultantId], references: [id], onDelete: SetNull)
@@ -341,6 +343,8 @@ model ScanFinding {
   recommendation   String?     @db.Text
   photoUrls        String[]
   sortOrder        Int         @default(0)
+  impactScore      Int?
+  effortScore      Int?
 
   scan QuickScan @relation(fields: [scanId], references: [id], onDelete: Cascade)
   cell ScanCell  @relation(fields: [cellId], references: [id], onDelete: Cascade)
@@ -480,6 +484,7 @@ model AssessmentResponse {
   templateId     String
   userId         String?
   organizationId String?
+  createdById    String?
   contactName    String?
   contactEmail   String?
   contactCompany String?
@@ -492,6 +497,7 @@ model AssessmentResponse {
   template     AssessmentTemplate   @relation(fields: [templateId], references: [id], onDelete: Cascade)
   user         User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
   organization Organization?        @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  createdBy    User?                @relation("CreatedAssessments", fields: [createdById], references: [id], onDelete: SetNull)
   answers      AssessmentAnswer[]
   resultCells  AssessmentResultCell[]
 
