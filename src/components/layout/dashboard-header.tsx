@@ -8,11 +8,18 @@ import {
   Home,
   MessageSquare,
   ClipboardCheck,
+  ListTodo,
+  FileText,
+  Package,
+  HelpCircle,
+  BarChart3,
   Settings,
   Shield,
   LogOut,
   User,
   Menu,
+  ChevronsUpDown,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -32,13 +39,24 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { trpc } from '@/trpc/client';
 
-const navItems = [
-  { label: 'Home', href: '/', icon: Home },
-  { label: 'Veiligheidsassistent', href: '/chat', icon: MessageSquare },
-  { label: 'Quick-Scan', href: '/quick-scan', icon: ClipboardCheck },
-  { label: 'Instellingen', href: '/settings', icon: Settings },
-  { label: 'Beheer', href: '/admin', icon: Shield },
+const allNavItems = [
+  { label: 'Home', href: '/', icon: Home, roles: null },
+  { label: 'QuickScan', href: '/quick-scan', icon: ClipboardCheck, roles: null },
+  { label: 'Acties', href: '/actions', icon: ListTodo, roles: null },
+  { label: 'Documenten', href: '/documents', icon: FileText, roles: null },
+  { label: 'Producten', href: '/products', icon: Package, roles: null },
+  { label: 'Zelfevaluatie', href: '/self-assessment', icon: HelpCircle, roles: null },
+  { label: 'Veiligheidsassistent', href: '/chat', icon: MessageSquare, roles: null },
+  { label: 'Benchmark', href: '/benchmark', icon: BarChart3, roles: null },
+  { label: 'Instellingen', href: '/settings', icon: Settings, roles: null },
+  {
+    label: 'Beheer',
+    href: '/admin',
+    icon: Shield,
+    roles: ['ADMIN', 'CONSULTANT'] as string[],
+  },
 ];
 
 function useUserInitials() {
@@ -54,13 +72,69 @@ function useUserInitials() {
   return { user, initials };
 }
 
+function OrgSwitcher() {
+  const { data: session, update } = useSession();
+  const { data: orgs } = trpc.organizations.list.useQuery(undefined, {
+    enabled: !!session?.user,
+  });
+  const switchOrg = trpc.organizations.switchOrg.useMutation({
+    onSuccess: () => {
+      update();
+      window.location.reload();
+    },
+  });
+
+  if (!orgs || orgs.length <= 1) return null;
+
+  const currentOrg = orgs.find((o) => o.id === session?.user?.organizationId);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="hidden h-8 gap-1 px-2 text-sm text-white/80 hover:bg-white/10 hover:text-white md:flex"
+        >
+          {currentOrg?.name ?? 'Organisatie'}
+          <ChevronsUpDown className="h-3.5 w-3.5 opacity-60" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-56">
+        <DropdownMenuLabel>Organisatie wisselen</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {orgs.map((org) => (
+          <DropdownMenuItem
+            key={org.id}
+            onClick={() => switchOrg.mutate({ organizationId: org.id })}
+            className="flex items-center justify-between"
+          >
+            {org.name}
+            {org.id === session?.user?.organizationId && (
+              <Check className="h-4 w-4" />
+            )}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export function DashboardHeader() {
   const pathname = usePathname();
   const { user, initials } = useUserInitials();
 
+  const globalRole = user?.globalRole;
+  const orgRole = user?.orgRole;
+  const effectiveRole = orgRole ?? globalRole;
+
+  const navItems = allNavItems.filter((item) => {
+    if (!item.roles) return true;
+    return item.roles.includes(effectiveRole ?? '') || item.roles.includes(globalRole ?? '');
+  });
+
   return (
     <header className="flex h-24 shrink-0 items-center bg-[#0052CC] px-4 md:px-12">
-      {/* Logo — matches login page exactly on desktop */}
+      {/* Logo */}
       <Link href="/" className="mr-8 shrink-0">
         <Image
           src="/logo-lc.svg"
@@ -80,20 +154,24 @@ export function DashboardHeader() {
         />
       </Link>
 
+      {/* Org switcher */}
+      <OrgSwitcher />
+
       {/* Desktop nav */}
       <nav className="hidden items-center gap-1 md:flex">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white',
+                'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white',
                 isActive && 'bg-white/15 text-white',
               )}
             >
-              <item.icon className="h-5 w-5" />
+              <item.icon className="h-4 w-4" />
               {item.label}
             </Link>
           );
@@ -171,7 +249,8 @@ export function DashboardHeader() {
             </SheetHeader>
             <nav className="flex flex-col gap-1 p-4">
               {navItems.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive =
+                  item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
                 return (
                   <Link
                     key={item.href}

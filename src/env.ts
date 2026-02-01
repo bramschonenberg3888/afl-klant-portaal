@@ -13,6 +13,7 @@ export const env = createEnv({
     NEXTAUTH_URL: z.string().url().optional(),
     OPENAI_API_KEY: z.string().min(1),
     FIRECRAWL_API_KEY: z.string().min(1),
+    BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
   },
 
   /**
@@ -34,6 +35,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

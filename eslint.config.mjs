@@ -21,6 +21,7 @@ export default [
       'react/prop-types': 'off',
       '@next/next/no-html-link-for-pages': 'off',
       'no-undef': 'off', // TypeScript handles this
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
   {

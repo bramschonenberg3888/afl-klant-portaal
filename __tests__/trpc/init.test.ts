@@ -40,12 +40,13 @@ describe('tRPC Init - createTRPCContext', () => {
     });
 
     it('should return session and userId when user is authenticated', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'user-123',
           name: 'Test User',
           email: 'test@example.com',
           image: 'https://example.com/avatar.jpg',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
@@ -62,10 +63,11 @@ describe('tRPC Init - createTRPCContext', () => {
     });
 
     it('should extract userId correctly from nested session.user.id', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'unique-user-id-456',
           email: 'user@example.com',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
@@ -116,12 +118,13 @@ describe('tRPC Init - createTRPCContext', () => {
     });
 
     it('should return full session object with all user properties', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'complete-user-789',
           name: 'Complete User',
           email: 'complete@example.com',
           image: 'https://example.com/complete-avatar.png',
+          globalRole: 'ADMIN',
         },
         expires: '2024-12-31T23:59:59.999Z',
       };
@@ -136,15 +139,17 @@ describe('tRPC Init - createTRPCContext', () => {
         name: 'Complete User',
         email: 'complete@example.com',
         image: 'https://example.com/complete-avatar.png',
+        globalRole: 'ADMIN',
       });
       expect(context.userId).toBe('complete-user-789');
     });
 
     it('should handle session with empty string userId', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: '',
           email: 'empty-id@example.com',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
@@ -159,8 +164,8 @@ describe('tRPC Init - createTRPCContext', () => {
     });
 
     it('should call auth() only once per context creation', async () => {
-      const mockSession = {
-        user: { id: 'test-user', email: 'test@example.com' },
+      const mockSession: Session = {
+        user: { id: 'test-user', email: 'test@example.com', globalRole: 'CLIENT' },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
 

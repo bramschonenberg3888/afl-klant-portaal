@@ -1,28 +1,20 @@
-import { createTRPCRouter, baseProcedure } from '../init';
+import { createTRPCRouter, authedProcedure } from '../init';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { TRPCError } from '@trpc/server';
 import { ingestUrl, ingestMultipleUrls, reprocessDocument } from '@/lib/scraper/ingest';
 
 export const adminRouter = createTRPCRouter({
-  ingestUrl: baseProcedure
+  ingestUrl: authedProcedure
     .input(z.object({ url: z.string().url() }))
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-      }
-
+    .mutation(async ({ input }) => {
       const result = await ingestUrl(input.url);
       return result;
     }),
 
-  ingestMultipleUrls: baseProcedure
+  ingestMultipleUrls: authedProcedure
     .input(z.object({ urls: z.array(z.string().url()).min(1).max(50) }))
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-      }
-
+    .mutation(async ({ input }) => {
       const results = await ingestMultipleUrls(input.urls);
       return {
         results,
@@ -31,22 +23,14 @@ export const adminRouter = createTRPCRouter({
       };
     }),
 
-  reprocessDocument: baseProcedure
+  reprocessDocument: authedProcedure
     .input(z.object({ documentId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-      }
-
+    .mutation(async ({ input }) => {
       const result = await reprocessDocument(input.documentId);
       return result;
     }),
 
-  getUsers: baseProcedure.query(async ({ ctx }) => {
-    if (!ctx.userId) {
-      throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-    }
-
+  getUsers: authedProcedure.query(async () => {
     const users = await db.user.findMany({
       select: {
         id: true,
@@ -54,6 +38,7 @@ export const adminRouter = createTRPCRouter({
         email: true,
         emailVerified: true,
         image: true,
+        globalRole: true,
         _count: {
           select: { conversations: true },
         },
@@ -64,13 +49,9 @@ export const adminRouter = createTRPCRouter({
     return users;
   }),
 
-  deleteUser: baseProcedure
+  deleteUser: authedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if (!ctx.userId) {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-      }
-
       // Prevent self-deletion
       if (ctx.userId === input.userId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Cannot delete your own account' });
@@ -83,11 +64,7 @@ export const adminRouter = createTRPCRouter({
       return { success: true };
     }),
 
-  getDashboardStats: baseProcedure.query(async ({ ctx }) => {
-    if (!ctx.userId) {
-      throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Must be logged in' });
-    }
-
+  getDashboardStats: authedProcedure.query(async () => {
     const [userCount, documentCount, chunkCount, conversationCount, messageCount] =
       await Promise.all([
         db.user.count(),

@@ -107,12 +107,13 @@ describe('tRPC App Router', () => {
     });
 
     it('should return session data when user is authenticated', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'user-123',
           name: 'Test User',
           email: 'test@example.com',
           image: 'https://example.com/avatar.jpg',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
@@ -128,10 +129,11 @@ describe('tRPC App Router', () => {
     });
 
     it('should return session with minimal user data', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'user-456',
           email: 'minimal@example.com',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
@@ -148,10 +150,11 @@ describe('tRPC App Router', () => {
     });
 
     it('should return session with expired timestamp (client should handle)', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'user-789',
           email: 'expired@example.com',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() - 86400000).toISOString(), // Expired yesterday
       };
@@ -166,10 +169,11 @@ describe('tRPC App Router', () => {
     });
 
     it('should handle session with undefined userId in context', async () => {
-      const mockSession = {
+      const mockSession: Session = {
         user: {
           id: 'user-abc',
           email: 'test@example.com',
+          globalRole: 'CLIENT',
         },
         expires: new Date(Date.now() + 86400000).toISOString(),
       };
