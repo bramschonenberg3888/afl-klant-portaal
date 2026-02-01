@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
+import { logAudit } from '@/lib/audit';
+import { createTRPCRouter, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 const LAYERS = ['RUIMTE_INRICHTING', 'WERKWIJZE_PROCESSEN', 'ORGANISATIE_BESTURING'] as const;
 const PERSPECTIVES = ['EFFICIENT', 'VEILIG'] as const;
@@ -15,6 +16,7 @@ export const quickscanRouter = createTRPCRouter({
         where: { organizationId: input.organizationId, status: 'PUBLISHED' },
         orderBy: { scanDate: 'desc' },
         include: {
+          organization: { select: { name: true } },
           cells: { include: { findings: true } },
           findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
           roadmapItems: { include: { owner: true }, orderBy: { priority: 'desc' } },
@@ -25,28 +27,30 @@ export const quickscanRouter = createTRPCRouter({
     }),
 
   /** Get a specific scan by id */
-  getById: authedProcedure.input(z.object({ scanId: z.string() })).query(async ({ input }) => {
-    const scan = await db.quickScan.findUnique({
-      where: { id: input.scanId },
-      include: {
-        organization: true,
-        cells: { include: { findings: true } },
-        findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
-        roadmapItems: {
-          include: { owner: true },
-          orderBy: [{ timeframe: 'asc' }, { priority: 'desc' }],
+  getById: orgMemberProcedure
+    .input(z.object({ organizationId: z.string(), scanId: z.string() }))
+    .query(async ({ input }) => {
+      const scan = await db.quickScan.findFirst({
+        where: { id: input.scanId, organizationId: input.organizationId },
+        include: {
+          organization: true,
+          cells: { include: { findings: true } },
+          findings: { include: { cell: true }, orderBy: { sortOrder: 'asc' } },
+          roadmapItems: {
+            include: { owner: true },
+            orderBy: [{ timeframe: 'asc' }, { priority: 'desc' }],
+          },
+          consultant: true,
+          accountManager: true,
         },
-        consultant: true,
-        accountManager: true,
-      },
-    });
+      });
 
-    if (!scan) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
-    }
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
 
-    return scan;
-  }),
+      return scan;
+    }),
 
   /** Get roadmap items with filters */
   getRoadmap: orgMemberProcedure
@@ -90,7 +94,7 @@ export const quickscanRouter = createTRPCRouter({
         accountManagerId: z.string().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const scan = await db.quickScan.create({
         data: {
           organizationId: input.organizationId,
@@ -111,6 +115,14 @@ export const quickscanRouter = createTRPCRouter({
 
       await db.scanCell.createMany({ data: cellData });
 
+      logAudit({
+        userId: ctx.userId,
+        action: 'CREATE',
+        resource: 'quickscan',
+        resourceId: scan.id,
+        details: { title: scan.title },
+      });
+
       return db.quickScan.findUnique({
         where: { id: scan.id },
         include: { cells: true },
@@ -128,6 +140,13 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
+      const cell = await db.scanCell.findUnique({
+        where: { id: input.cellId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!cell || cell.scan.organizationId !== input.organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Cell not found' });
+      }
       return db.scanCell.update({
         where: { id: input.cellId },
         data: {
@@ -153,7 +172,13 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, ...data } = input;
+      const { organizationId, ...data } = input;
+      const scan = await db.quickScan.findFirst({
+        where: { id: input.scanId, organizationId },
+      });
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
       return db.scanFinding.create({ data });
     }),
 
@@ -172,7 +197,14 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, findingId, ...data } = input;
+      const { organizationId, findingId, ...data } = input;
+      const finding = await db.scanFinding.findUnique({
+        where: { id: findingId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!finding || finding.scan.organizationId !== organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Finding not found' });
+      }
       return db.scanFinding.update({ where: { id: findingId }, data });
     }),
 
@@ -180,6 +212,13 @@ export const quickscanRouter = createTRPCRouter({
   deleteFinding: orgAdminProcedure
     .input(z.object({ organizationId: z.string(), findingId: z.string() }))
     .mutation(async ({ input }) => {
+      const finding = await db.scanFinding.findUnique({
+        where: { id: input.findingId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!finding || finding.scan.organizationId !== input.organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Finding not found' });
+      }
       await db.scanFinding.delete({ where: { id: input.findingId } });
       return { success: true };
     }),
@@ -195,6 +234,13 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
+      const finding = await db.scanFinding.findUnique({
+        where: { id: input.findingId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!finding || finding.scan.organizationId !== input.organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Finding not found' });
+      }
       return db.scanFinding.update({
         where: { id: input.findingId },
         data: {
@@ -214,6 +260,12 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
+      const scan = await db.quickScan.findFirst({
+        where: { id: input.scanId, organizationId: input.organizationId },
+      });
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
       return db.quickScan.update({
         where: { id: input.scanId },
         data: { managementSummary: input.managementSummary },
@@ -235,7 +287,13 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, dueDate, ...data } = input;
+      const { organizationId, dueDate, ...data } = input;
+      const scan = await db.quickScan.findFirst({
+        where: { id: input.scanId, organizationId },
+      });
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
       return db.roadmapItem.create({
         data: {
           ...data,
@@ -260,7 +318,14 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, itemId, dueDate, ...data } = input;
+      const { organizationId, itemId, dueDate, ...data } = input;
+      const item = await db.roadmapItem.findUnique({
+        where: { id: itemId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!item || item.scan.organizationId !== organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Roadmap item not found' });
+      }
       return db.roadmapItem.update({
         where: { id: itemId },
         data: {
@@ -274,6 +339,13 @@ export const quickscanRouter = createTRPCRouter({
   deleteRoadmapItem: orgAdminProcedure
     .input(z.object({ organizationId: z.string(), itemId: z.string() }))
     .mutation(async ({ input }) => {
+      const item = await db.roadmapItem.findUnique({
+        where: { id: input.itemId },
+        include: { scan: { select: { organizationId: true } } },
+      });
+      if (!item || item.scan.organizationId !== input.organizationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Roadmap item not found' });
+      }
       await db.roadmapItem.delete({ where: { id: input.itemId } });
       return { success: true };
     }),
@@ -281,11 +353,25 @@ export const quickscanRouter = createTRPCRouter({
   /** Publish a scan */
   publish: orgAdminProcedure
     .input(z.object({ organizationId: z.string(), scanId: z.string() }))
-    .mutation(async ({ input }) => {
-      return db.quickScan.update({
+    .mutation(async ({ ctx, input }) => {
+      const scan = await db.quickScan.findFirst({
+        where: { id: input.scanId, organizationId: input.organizationId },
+      });
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
+      const updated = await db.quickScan.update({
         where: { id: input.scanId },
         data: { status: 'PUBLISHED' },
       });
+      logAudit({
+        userId: ctx.userId,
+        action: 'STATUS_CHANGE',
+        resource: 'quickscan',
+        resourceId: input.scanId,
+        details: { from: scan.status, to: 'PUBLISHED' },
+      });
+      return updated;
     }),
 
   /** Update overall summaries */
@@ -300,7 +386,13 @@ export const quickscanRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, scanId, ...data } = input;
+      const { organizationId, scanId, ...data } = input;
+      const scan = await db.quickScan.findFirst({
+        where: { id: scanId, organizationId },
+      });
+      if (!scan) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Scan not found' });
+      }
       return db.quickScan.update({ where: { id: scanId }, data });
     }),
 });

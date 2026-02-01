@@ -5,8 +5,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Bot, User, Copy, Check, ExternalLink, AlertCircle } from 'lucide-react';
+import { Bot, User, Copy, Check, ExternalLink, AlertCircle, RefreshCw } from 'lucide-react';
 import { useState, useCallback, useEffect, type ComponentProps } from 'react';
+import { MessageFeedback } from './message-feedback';
 
 export interface SourceInfo {
   url: string;
@@ -19,6 +20,9 @@ interface MessageProps {
   sources?: SourceInfo[];
   isLoading?: boolean;
   isError?: boolean;
+  messageId?: string;
+  feedback?: string | null;
+  onRetry?: () => void;
 }
 
 function ThinkingIndicator() {
@@ -52,11 +56,17 @@ function ThinkingIndicator() {
   );
 }
 
-function ErrorIndicator() {
+function ErrorIndicator({ onRetry }: { onRetry?: () => void }) {
   return (
     <div className="flex items-center gap-2 py-1 text-destructive">
       <AlertCircle className="h-4 w-4" />
-      <span className="text-sm">Er is een fout opgetreden. Probeer het opnieuw.</span>
+      <span className="text-sm">Er is een fout opgetreden.</span>
+      {onRetry && (
+        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={onRetry}>
+          <RefreshCw className="h-3 w-3 mr-1" />
+          Opnieuw proberen
+        </Button>
+      )}
     </div>
   );
 }
@@ -158,7 +168,16 @@ function SourceCitation({ source, index }: { source: SourceInfo; index: number }
   );
 }
 
-export function Message({ role, content, sources, isLoading, isError }: MessageProps) {
+export function Message({
+  role,
+  content,
+  sources,
+  isLoading,
+  isError,
+  messageId,
+  feedback,
+  onRetry,
+}: MessageProps) {
   const isUser = role === 'user';
 
   return (
@@ -182,7 +201,7 @@ export function Message({ role, content, sources, isLoading, isError }: MessageP
           )}
         >
           {isError ? (
-            <ErrorIndicator />
+            <ErrorIndicator onRetry={onRetry} />
           ) : isLoading ? (
             <ThinkingIndicator />
           ) : (
@@ -199,10 +218,11 @@ export function Message({ role, content, sources, isLoading, isError }: MessageP
           )}
         </div>
 
-        {/* Copy button for assistant messages */}
+        {/* Actions for assistant messages */}
         {!isUser && !isLoading && !isError && content && (
           <div className="flex items-center gap-1 mt-0.5">
             <CopyButton content={content} />
+            {messageId && <MessageFeedback messageId={messageId} currentFeedback={feedback ?? null} />}
           </div>
         )}
 

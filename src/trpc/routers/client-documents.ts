@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
-import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
+import { logAudit } from '@/lib/audit';
+import { createTRPCRouter, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 const categories = [
   'QUICKSCAN_REPORT',
@@ -60,25 +61,27 @@ export const clientDocumentsRouter = createTRPCRouter({
     }),
 
   /** Get document by id with version history */
-  getById: authedProcedure.input(z.object({ documentId: z.string() })).query(async ({ input }) => {
-    const doc = await db.clientDocument.findUnique({
-      where: { id: input.documentId },
-      include: {
-        uploadedBy: true,
-        organization: true,
-        versions: {
-          orderBy: { version: 'desc' },
-          include: { uploadedBy: true },
+  getById: orgMemberProcedure
+    .input(z.object({ organizationId: z.string(), documentId: z.string() }))
+    .query(async ({ input }) => {
+      const doc = await db.clientDocument.findFirst({
+        where: { id: input.documentId, organizationId: input.organizationId },
+        include: {
+          uploadedBy: true,
+          organization: true,
+          versions: {
+            orderBy: { version: 'desc' },
+            include: { uploadedBy: true },
+          },
         },
-      },
-    });
+      });
 
-    if (!doc) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
-    }
+      if (!doc) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
+      }
 
-    return doc;
-  }),
+      return doc;
+    }),
 
   /** Create (upload) a new document record */
   upload: orgMemberProcedure
@@ -98,7 +101,7 @@ export const clientDocumentsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { organizationId, expiresAt, ...data } = input;
-      return db.clientDocument.create({
+      const doc = await db.clientDocument.create({
         data: {
           ...data,
           organizationId,
@@ -106,6 +109,14 @@ export const clientDocumentsRouter = createTRPCRouter({
           ...(expiresAt && { expiresAt: new Date(expiresAt) }),
         },
       });
+      logAudit({
+        userId: ctx.userId,
+        action: 'CREATE',
+        resource: 'document',
+        resourceId: doc.id,
+        details: { title: doc.title, category: doc.category },
+      });
+      return doc;
     }),
 
   /** Update document metadata */
@@ -121,7 +132,13 @@ export const clientDocumentsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, documentId, expiresAt, ...data } = input;
+      const { organizationId, documentId, expiresAt, ...data } = input;
+      const existing = await db.clientDocument.findFirst({
+        where: { id: documentId, organizationId },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
+      }
       return db.clientDocument.update({
         where: { id: documentId },
         data: {
@@ -149,7 +166,7 @@ export const clientDocumentsRouter = createTRPCRouter({
         include: { versions: { orderBy: { version: 'desc' }, take: 1 } },
       });
 
-      if (!parent) {
+      if (!parent || parent.organizationId !== input.organizationId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Parent document not found' });
       }
 
@@ -175,8 +192,21 @@ export const clientDocumentsRouter = createTRPCRouter({
   /** Delete a document */
   delete: orgAdminProcedure
     .input(z.object({ organizationId: z.string(), documentId: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const existing = await db.clientDocument.findFirst({
+        where: { id: input.documentId, organizationId: input.organizationId },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Document not found' });
+      }
       await db.clientDocument.delete({ where: { id: input.documentId } });
+      logAudit({
+        userId: ctx.userId,
+        action: 'DELETE',
+        resource: 'document',
+        resourceId: input.documentId,
+        details: { title: existing.title },
+      });
       return { success: true };
     }),
 

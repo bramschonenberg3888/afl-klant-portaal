@@ -23,14 +23,17 @@ export default function EditScanPage({ params }: { params: Promise<{ scanId: str
   const orgId = session?.user?.organizationId;
 
   const utils = trpc.useUtils();
-  const { data: scan, isLoading } = trpc.quickscan.getById.useQuery({ scanId });
+  const { data: scan, isLoading } = trpc.quickscan.getById.useQuery(
+    { scanId, organizationId: orgId! },
+    { enabled: !!orgId }
+  );
 
   const updateCell = trpc.quickscan.updateCell.useMutation({
-    onSuccess: () => utils.quickscan.getById.invalidate({ scanId }),
+    onSuccess: () => utils.quickscan.getById.invalidate(),
   });
 
   const updateSummaries = trpc.quickscan.updateSummaries.useMutation({
-    onSuccess: () => utils.quickscan.getById.invalidate({ scanId }),
+    onSuccess: () => utils.quickscan.getById.invalidate(),
   });
 
   const publish = trpc.quickscan.publish.useMutation({

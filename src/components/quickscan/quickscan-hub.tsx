@@ -10,6 +10,7 @@ import {
   ListTodo,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ExportPdfButton } from './export-pdf-button';
 import { TabDashboard } from './tab-dashboard';
 import { TabManagementSummary } from './tab-management-summary';
 import { TabBevindingen } from './tab-bevindingen';
@@ -74,10 +75,11 @@ type TabValue = (typeof tabs)[number]['value'];
 
 interface QuickScanHubProps {
   scan: QuickScanData;
+  orgName?: string;
   initialTab?: string;
 }
 
-export function QuickScanHub({ scan, initialTab }: QuickScanHubProps) {
+export function QuickScanHub({ scan, orgName, initialTab }: QuickScanHubProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentTab = (searchParams.get('tab') ?? initialTab ?? 'dashboard') as TabValue;
@@ -95,7 +97,10 @@ export function QuickScanHub({ scan, initialTab }: QuickScanHubProps) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">{scan.title}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{scan.title}</h1>
+        <ExportPdfButton scan={scan} orgName={orgName ?? ''} />
+      </div>
 
       <Tabs value={currentTab} onValueChange={handleTabChange}>
         <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">

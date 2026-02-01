@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import { useSession } from 'next-auth/react';
 import { trpc } from '@/trpc/client';
 import { Button } from '@/components/ui/button';
 import { DocumentDetail } from '@/components/documents/document-detail';
@@ -13,9 +14,12 @@ export default function DocumentDetailPage({
   params: Promise<{ documentId: string }>;
 }) {
   const { documentId } = use(params);
-  const { data: document, isLoading } = trpc.clientDocuments.getById.useQuery({
-    documentId,
-  });
+  const { data: session } = useSession();
+  const organizationId = session?.user?.organizationId;
+  const { data: document, isLoading } = trpc.clientDocuments.getById.useQuery(
+    { documentId, organizationId: organizationId! },
+    { enabled: !!organizationId }
+  );
 
   if (isLoading) {
     return (

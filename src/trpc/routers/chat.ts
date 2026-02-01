@@ -1,4 +1,4 @@
-import { createTRPCRouter, baseProcedure } from '../init';
+import { createTRPCRouter, authedProcedure, baseProcedure } from '../init';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { TRPCError } from '@trpc/server';
@@ -66,6 +66,35 @@ export const chatRouter = createTRPCRouter({
 
       await db.conversation.delete({
         where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
+
+  submitFeedback: authedProcedure
+    .input(
+      z.object({
+        messageId: z.string(),
+        feedback: z.enum(['positive', 'negative']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const message = await db.message.findUnique({
+        where: { id: input.messageId },
+        include: { conversation: { select: { userId: true } } },
+      });
+
+      if (!message) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Message not found' });
+      }
+
+      if (message.conversation.userId !== ctx.userId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized' });
+      }
+
+      await db.message.update({
+        where: { id: input.messageId },
+        data: { feedback: input.feedback },
       });
 
       return { success: true };

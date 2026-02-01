@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { nl } from 'date-fns/locale';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ChatSkeleton } from '@/components/skeletons/chat-skeleton';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, ArrowRight } from 'lucide-react';
 import { trpc } from '@/trpc/client';
@@ -27,17 +27,7 @@ export function RecentChats() {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="space-y-1.5 flex-1">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/4" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <ChatSkeleton />
         ) : recentConversations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <MessageSquare className="h-10 w-10 text-muted-foreground mb-3" />

@@ -10,6 +10,7 @@ import { clientDocumentsRouter } from './client-documents';
 import { assessmentRouter } from './assessment';
 import { productsRouter } from './products';
 import { benchmarkRouter } from './benchmark';
+import { auditRouter } from './audit';
 
 export const appRouter = createTRPCRouter({
   hello: baseProcedure.input(z.object({ name: z.string() }).optional()).query(({ input }) => ({
@@ -30,6 +31,7 @@ export const appRouter = createTRPCRouter({
   assessment: assessmentRouter,
   products: productsRouter,
   benchmark: benchmarkRouter,
+  audit: auditRouter,
 });
 
 export type AppRouter = typeof appRouter;

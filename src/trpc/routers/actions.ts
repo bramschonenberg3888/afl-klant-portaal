@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/lib/db';
+import { logAudit } from '@/lib/audit';
 import { createTRPCRouter, authedProcedure, orgMemberProcedure, orgAdminProcedure } from '../init';
 
 export const actionsRouter = createTRPCRouter({
@@ -53,27 +54,29 @@ export const actionsRouter = createTRPCRouter({
     }),
 
   /** Get action by id with comments */
-  getById: authedProcedure.input(z.object({ actionId: z.string() })).query(async ({ input }) => {
-    const action = await db.action.findUnique({
-      where: { id: input.actionId },
-      include: {
-        assignee: true,
-        reporter: true,
-        finding: { include: { cell: true } },
-        comments: {
-          include: { author: true },
-          orderBy: { createdAt: 'asc' },
+  getById: orgMemberProcedure
+    .input(z.object({ organizationId: z.string(), actionId: z.string() }))
+    .query(async ({ input }) => {
+      const action = await db.action.findFirst({
+        where: { id: input.actionId, organizationId: input.organizationId },
+        include: {
+          assignee: true,
+          reporter: true,
+          finding: { include: { cell: true } },
+          comments: {
+            include: { author: true },
+            orderBy: { createdAt: 'asc' },
+          },
+          organization: true,
         },
-        organization: true,
-      },
-    });
+      });
 
-    if (!action) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
-    }
+      if (!action) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+      }
 
-    return action;
-  }),
+      return action;
+    }),
 
   /** Create an action */
   create: orgMemberProcedure
@@ -94,7 +97,7 @@ export const actionsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { organizationId, dueDate, ...data } = input;
-      return db.action.create({
+      const action = await db.action.create({
         data: {
           ...data,
           organizationId,
@@ -102,6 +105,14 @@ export const actionsRouter = createTRPCRouter({
           ...(dueDate && { dueDate: new Date(dueDate) }),
         },
       });
+      logAudit({
+        userId: ctx.userId,
+        action: 'CREATE',
+        resource: 'action',
+        resourceId: action.id,
+        details: { title: action.title },
+      });
+      return action;
     }),
 
   /** Update an action */
@@ -121,15 +132,29 @@ export const actionsRouter = createTRPCRouter({
         dueDate: z.string().datetime().nullable().optional(),
       })
     )
-    .mutation(async ({ input }) => {
-      const { organizationId: _organizationId, actionId, dueDate, ...data } = input;
-      return db.action.update({
+    .mutation(async ({ ctx, input }) => {
+      const { organizationId, actionId, dueDate, ...data } = input;
+      const existing = await db.action.findFirst({
+        where: { id: actionId, organizationId },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+      }
+      const updated = await db.action.update({
         where: { id: actionId },
         data: {
           ...data,
           ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
         },
       });
+      logAudit({
+        userId: ctx.userId,
+        action: 'UPDATE',
+        resource: 'action',
+        resourceId: actionId,
+        details: { changes: data },
+      });
+      return updated;
     }),
 
   /** Update just the status */
@@ -141,21 +166,48 @@ export const actionsRouter = createTRPCRouter({
         status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'DEFERRED', 'CANCELLED']),
       })
     )
-    .mutation(async ({ input }) => {
-      return db.action.update({
+    .mutation(async ({ ctx, input }) => {
+      const existing = await db.action.findFirst({
+        where: { id: input.actionId, organizationId: input.organizationId },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+      }
+      const updated = await db.action.update({
         where: { id: input.actionId },
         data: {
           status: input.status,
           ...(input.status === 'DONE' && { completedAt: new Date() }),
         },
       });
+      logAudit({
+        userId: ctx.userId,
+        action: 'STATUS_CHANGE',
+        resource: 'action',
+        resourceId: input.actionId,
+        details: { from: existing.status, to: input.status },
+      });
+      return updated;
     }),
 
   /** Delete an action */
   delete: orgAdminProcedure
     .input(z.object({ organizationId: z.string(), actionId: z.string() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const existing = await db.action.findFirst({
+        where: { id: input.actionId, organizationId: input.organizationId },
+      });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+      }
       await db.action.delete({ where: { id: input.actionId } });
+      logAudit({
+        userId: ctx.userId,
+        action: 'DELETE',
+        resource: 'action',
+        resourceId: input.actionId,
+        details: { title: existing.title },
+      });
       return { success: true };
     }),
 
@@ -169,6 +221,12 @@ export const actionsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const action = await db.action.findFirst({
+        where: { id: input.actionId, organizationId: input.organizationId },
+      });
+      if (!action) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Action not found' });
+      }
       return db.actionComment.create({
         data: {
           actionId: input.actionId,

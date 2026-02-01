@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpDown, Calendar, ExternalLink } from 'lucide-react';
+import { ArrowUpDown, Calendar, ExternalLink, Loader2 } from 'lucide-react';
 import { trpc } from '@/trpc/client';
 import {
   Table,
@@ -15,7 +15,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ActionListSkeleton } from '@/components/skeletons/action-list-skeleton';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { cn } from '@/lib/utils';
 import {
   STATUS_LABELS,
@@ -64,10 +65,14 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
   const [sortField, setSortField] = useState<SortField>('priority');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
-  const { data, isLoading } = trpc.actions.list.useQuery({
-    organizationId,
-    ...filters,
-    limit: 100,
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.actions.list.useInfiniteQuery(
+      { organizationId, ...filters, limit: 50 },
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    );
+
+  const sentinelRef = useInfiniteScroll(() => fetchNextPage(), {
+    enabled: !!hasNextPage && !isFetchingNextPage,
   });
 
   function toggleSort(field: SortField) {
@@ -79,7 +84,7 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
     }
   }
 
-  const actions = data?.actions ?? [];
+  const actions = data?.pages.flatMap((p) => p.actions) ?? [];
 
   const sortedActions = [...actions].sort((a, b) => {
     const dir = sortDir === 'asc' ? 1 : -1;
@@ -103,13 +108,7 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
   });
 
   if (isLoading) {
-    return (
-      <div className="space-y-2">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-12 w-full rounded-md" />
-        ))}
-      </div>
-    );
+    return <ActionListSkeleton />;
   }
 
   if (sortedActions.length === 0) {
@@ -124,125 +123,135 @@ export function ActionList({ organizationId, filters }: ActionListProps) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <SortableHead field="title" onToggleSort={toggleSort}>
-            Titel
-          </SortableHead>
-          <SortableHead field="status" onToggleSort={toggleSort}>
-            Status
-          </SortableHead>
-          <SortableHead field="priority" onToggleSort={toggleSort}>
-            Prioriteit
-          </SortableHead>
-          <TableHead>Toegewezen aan</TableHead>
-          <SortableHead field="dueDate" onToggleSort={toggleSort}>
-            Deadline
-          </SortableHead>
-          <SortableHead field="layer" onToggleSort={toggleSort}>
-            Laag
-          </SortableHead>
-          <TableHead className="w-10" />
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {sortedActions.map((action) => {
-          const dueDate = action.dueDate ? new Date(action.dueDate) : null;
-          const isOverdue =
-            dueDate &&
-            dueDate < new Date() &&
-            action.status !== 'DONE' &&
-            action.status !== 'CANCELLED';
+    <div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <SortableHead field="title" onToggleSort={toggleSort}>
+              Titel
+            </SortableHead>
+            <SortableHead field="status" onToggleSort={toggleSort}>
+              Status
+            </SortableHead>
+            <SortableHead field="priority" onToggleSort={toggleSort}>
+              Prioriteit
+            </SortableHead>
+            <TableHead>Toegewezen aan</TableHead>
+            <SortableHead field="dueDate" onToggleSort={toggleSort}>
+              Deadline
+            </SortableHead>
+            <SortableHead field="layer" onToggleSort={toggleSort}>
+              Laag
+            </SortableHead>
+            <TableHead className="w-10" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedActions.map((action) => {
+            const dueDate = action.dueDate ? new Date(action.dueDate) : null;
+            const isOverdue =
+              dueDate &&
+              dueDate < new Date() &&
+              action.status !== 'DONE' &&
+              action.status !== 'CANCELLED';
 
-          return (
-            <TableRow key={action.id} className="group">
-              <TableCell>
-                <Link
-                  href={`/actions/${action.id}`}
-                  className="font-medium hover:underline text-sm"
-                >
-                  {action.title}
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Badge
-                  className={cn('text-[10px]', STATUS_COLORS[action.status])}
-                  variant="secondary"
-                >
-                  {STATUS_LABELS[action.status]}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline" className="text-[10px]">
-                  {PRIORITY_LABELS[action.priority]}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {action.assignee ? (
-                  <div className="flex items-center gap-2">
-                    <Avatar className="size-6">
-                      <AvatarFallback className="text-[10px]">
-                        {action.assignee.name
-                          ? action.assignee.name
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                              .toUpperCase()
-                              .slice(0, 2)
-                          : '?'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm">{action.assignee.name ?? 'Onbekend'}</span>
-                  </div>
-                ) : (
-                  <span className="text-sm text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {dueDate ? (
-                  <span
-                    className={cn(
-                      'flex items-center gap-1 text-sm',
-                      isOverdue ? 'text-red-600 font-medium' : 'text-muted-foreground'
-                    )}
+            return (
+              <TableRow key={action.id} className="group">
+                <TableCell>
+                  <Link
+                    href={`/actions/${action.id}`}
+                    className="font-medium hover:underline text-sm"
                   >
-                    <Calendar className="size-3" />
-                    {dueDate.toLocaleDateString('nl-NL', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </span>
-                ) : (
-                  <span className="text-sm text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {action.layer ? (
-                  <Badge variant="outline" className="text-[10px]">
-                    {LAYER_LABELS[action.layer]}
-                  </Badge>
-                ) : (
-                  <span className="text-sm text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="ghost"
-                  size="icon-xs"
-                  asChild
-                  className="opacity-0 group-hover:opacity-100"
-                >
-                  <Link href={`/actions/${action.id}`}>
-                    <ExternalLink className="size-3" />
+                    {action.title}
                   </Link>
-                </Button>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    className={cn('text-[10px]', STATUS_COLORS[action.status])}
+                    variant="secondary"
+                  >
+                    {STATUS_LABELS[action.status]}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline" className="text-[10px]">
+                    {PRIORITY_LABELS[action.priority]}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {action.assignee ? (
+                    <div className="flex items-center gap-2">
+                      <Avatar className="size-6">
+                        <AvatarFallback className="text-[10px]">
+                          {action.assignee.name
+                            ? action.assignee.name
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .toUpperCase()
+                                .slice(0, 2)
+                            : '?'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm">{action.assignee.name ?? 'Onbekend'}</span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {dueDate ? (
+                    <span
+                      className={cn(
+                        'flex items-center gap-1 text-sm',
+                        isOverdue ? 'text-red-600 font-medium' : 'text-muted-foreground'
+                      )}
+                    >
+                      <Calendar className="size-3" />
+                      {dueDate.toLocaleDateString('nl-NL', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {action.layer ? (
+                    <Badge variant="outline" className="text-[10px]">
+                      {LAYER_LABELS[action.layer]}
+                    </Badge>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">-</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    asChild
+                    className="opacity-0 group-hover:opacity-100"
+                  >
+                    <Link href={`/actions/${action.id}`}>
+                      <ExternalLink className="size-3" />
+                    </Link>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+
+      {/* Infinite scroll sentinel */}
+      <div ref={sentinelRef} className="h-4" />
+      {isFetchingNextPage && (
+        <div className="flex justify-center py-4">
+          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        </div>
+      )}
+    </div>
   );
 }

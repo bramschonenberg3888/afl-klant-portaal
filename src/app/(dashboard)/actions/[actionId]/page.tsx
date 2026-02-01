@@ -72,7 +72,10 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
   const [editDueDate, setEditDueDate] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const { data: action, isLoading } = trpc.actions.getById.useQuery({ actionId });
+  const { data: action, isLoading } = trpc.actions.getById.useQuery(
+    { actionId, organizationId: organizationId! },
+    { enabled: !!organizationId }
+  );
 
   function startEditing() {
     if (!action) return;
@@ -87,7 +90,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
 
   const updateStatus = trpc.actions.updateStatus.useMutation({
     onSuccess: () => {
-      utils.actions.getById.invalidate({ actionId });
+      utils.actions.getById.invalidate();
       utils.actions.list.invalidate();
       utils.actions.getStats.invalidate();
     },
@@ -96,7 +99,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
   const updateAction = trpc.actions.update.useMutation({
     onSuccess: () => {
       setIsEditing(false);
-      utils.actions.getById.invalidate({ actionId });
+      utils.actions.getById.invalidate();
       utils.actions.list.invalidate();
     },
   });
@@ -110,7 +113,7 @@ export default function ActionDetailPage({ params }: { params: Promise<{ actionI
   const addComment = trpc.actions.addComment.useMutation({
     onSuccess: () => {
       setCommentContent('');
-      utils.actions.getById.invalidate({ actionId });
+      utils.actions.getById.invalidate();
     },
   });
 

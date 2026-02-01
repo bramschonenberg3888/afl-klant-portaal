@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
+import { DocumentListSkeleton } from '@/components/skeletons/document-list-skeleton';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, Loader2 } from 'lucide-react';
 import { trpc } from '@/trpc/client';
+import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { DocumentCard, CATEGORY_LABELS } from './document-card';
 import type { DocumentCategory } from '@/generated/prisma/client';
 
@@ -31,14 +32,25 @@ export function DocumentList({ organizationId }: DocumentListProps) {
   const { data: categoryCounts, isLoading: countsLoading } =
     trpc.clientDocuments.getByCategory.useQuery({ organizationId }, { enabled: !!organizationId });
 
-  const { data: documentsData, isLoading: docsLoading } = trpc.clientDocuments.list.useQuery(
-    {
-      organizationId,
-      category: activeCategory === 'ALL' ? undefined : (activeCategory as DocumentCategory),
-      search: searchQuery || undefined,
-    },
-    { enabled: !!organizationId }
-  );
+  const { data, isLoading: docsLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    trpc.clientDocuments.list.useInfiniteQuery(
+      {
+        organizationId,
+        category: activeCategory === 'ALL' ? undefined : (activeCategory as DocumentCategory),
+        search: searchQuery || undefined,
+        limit: 50,
+      },
+      {
+        enabled: !!organizationId,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
+
+  const sentinelRef = useInfiniteScroll(() => fetchNextPage(), {
+    enabled: !!hasNextPage && !isFetchingNextPage,
+  });
+
+  const documents = data?.pages.flatMap((p) => p.documents) ?? [];
 
   const countMap = new Map<string, number>();
   let totalCount = 0;
@@ -88,16 +100,21 @@ export function DocumentList({ organizationId }: DocumentListProps) {
         {/* Shared content for all tabs */}
         <TabsContent value={activeCategory} className="mt-4">
           {docsLoading ? (
-            <div className="grid gap-3 md:grid-cols-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-24 w-full rounded-lg" />
-              ))}
-            </div>
-          ) : documentsData?.documents && documentsData.documents.length > 0 ? (
-            <div className="grid gap-3 md:grid-cols-2">
-              {documentsData.documents.map((doc) => (
-                <DocumentCard key={doc.id} document={doc} />
-              ))}
+            <DocumentListSkeleton />
+          ) : documents.length > 0 ? (
+            <div>
+              <div className="grid gap-3 md:grid-cols-2">
+                {documents.map((doc) => (
+                  <DocumentCard key={doc.id} document={doc} />
+                ))}
+              </div>
+              {/* Infinite scroll sentinel */}
+              <div ref={sentinelRef} className="h-4" />
+              {isFetchingNextPage && (
+                <div className="flex justify-center py-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">

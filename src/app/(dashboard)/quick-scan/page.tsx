@@ -58,7 +58,7 @@ function QuickScanPageContent() {
     );
   }
 
-  return <QuickScanHub scan={scan} />;
+  return <QuickScanHub scan={scan} orgName={scan.organization?.name} />;
 }
 
 export default function QuickScanPage() {

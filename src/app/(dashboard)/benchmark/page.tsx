@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BarChart3, RefreshCw, ClipboardCheck } from 'lucide-react';
 import Link from 'next/link';
+import { BenchmarkSkeleton } from '@/components/skeletons/benchmark-skeleton';
 
 export default function BenchmarkPage() {
   const { data: session } = useSession();
@@ -36,18 +37,7 @@ export default function BenchmarkPage() {
   const isLoading = benchmarkLoading || positionLoading;
 
   if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="h-8 w-48 animate-pulse rounded bg-muted" />
-            <div className="mt-2 h-4 w-64 animate-pulse rounded bg-muted" />
-          </div>
-        </div>
-        <div className="h-64 animate-pulse rounded-lg bg-muted" />
-        <div className="h-48 animate-pulse rounded-lg bg-muted" />
-      </div>
-    );
+    return <BenchmarkSkeleton />;
   }
 
   const hasBenchmark = !!latestBenchmark;

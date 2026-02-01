@@ -14,9 +14,10 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { toast } from 'sonner';
 import { trpc } from '@/trpc/client';
 import { ActionCard, STATUS_LABELS } from '@/components/actions/action-card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ActionBoardSkeleton } from '@/components/skeletons/action-board-skeleton';
 import { cn } from '@/lib/utils';
 import type { ActionStatus } from '@/generated/prisma/client';
 import type { ActionFilters } from '@/components/actions/action-filters';
@@ -101,8 +102,30 @@ export function ActionBoard({ organizationId, filters }: ActionBoardProps) {
     limit: 100,
   });
 
+  const queryKey = { organizationId, ...filters, limit: 100 };
+
   const updateStatus = trpc.actions.updateStatus.useMutation({
-    onSuccess: () => {
+    onMutate: async ({ actionId, status }) => {
+      await utils.actions.list.cancel();
+      const previousData = utils.actions.list.getData(queryKey);
+
+      utils.actions.list.setData(queryKey, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          actions: old.actions.map((a) => (a.id === actionId ? { ...a, status } : a)),
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousData) {
+        utils.actions.list.setData(queryKey, context.previousData);
+      }
+      toast.error('Status update mislukt');
+    },
+    onSettled: () => {
       utils.actions.list.invalidate();
       utils.actions.getStats.invalidate();
     },
@@ -158,13 +181,7 @@ export function ActionBoard({ organizationId, filters }: ActionBoardProps) {
   }
 
   if (isLoading) {
-    return (
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        {BOARD_COLUMNS.map((status) => (
-          <Skeleton key={status} className="h-[400px] rounded-xl" />
-        ))}
-      </div>
-    );
+    return <ActionBoardSkeleton />;
   }
 
   return (

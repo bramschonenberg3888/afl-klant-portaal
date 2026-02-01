@@ -50,6 +50,16 @@ export function ChatInterface({ conversationId, onOpenSidebar }: ChatInterfacePr
 
   // Push loaded DB messages into the chat once fetched
   const dbMessages = conversationData?.messages;
+  const feedbackMap = useMemo(() => {
+    const map = new Map<string, string | null>();
+    if (dbMessages) {
+      for (const msg of dbMessages) {
+        map.set(msg.id, msg.feedback);
+      }
+    }
+    return map;
+  }, [dbMessages]);
+
   useEffect(() => {
     if (!dbMessages || dbMessages.length === 0) return;
     chat.setMessages(
@@ -64,6 +74,7 @@ export function ChatInterface({ conversationId, onOpenSidebar }: ChatInterfacePr
   }, [dbMessages]);
 
   const isLoading = chat.status === 'streaming' || chat.status === 'submitted';
+  const hasError = chat.status === 'error';
 
   // Auto-focus textarea on mount
   useEffect(() => {
@@ -165,9 +176,19 @@ export function ChatInterface({ conversationId, onOpenSidebar }: ChatInterfacePr
                   role={message.role as 'user' | 'assistant'}
                   content={getMessageContent(message)}
                   sources={message.role === 'assistant' ? getMessageSources(message) : undefined}
+                  messageId={message.role === 'assistant' ? message.id : undefined}
+                  feedback={feedbackMap.get(message.id)}
                 />
               ))}
               {isLoading && <Message role="assistant" content="" isLoading />}
+              {hasError && (
+                <Message
+                  role="assistant"
+                  content=""
+                  isError
+                  onRetry={() => chat.regenerate()}
+                />
+              )}
               <div ref={endRef} />
             </div>
           )}

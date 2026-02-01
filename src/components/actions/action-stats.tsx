@@ -2,7 +2,7 @@
 
 import { ListTodo, PlayCircle, CheckCircle2, PauseCircle, XCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ActionStatsSkeleton } from '@/components/skeletons/action-stats-skeleton';
 import { trpc } from '@/trpc/client';
 import { cn } from '@/lib/utils';
 
@@ -14,13 +14,7 @@ export function ActionStats({ organizationId }: ActionStatsProps) {
   const { data: stats, isLoading } = trpc.actions.getStats.useQuery({ organizationId });
 
   if (isLoading) {
-    return (
-      <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-      </div>
-    );
+    return <ActionStatsSkeleton />;
   }
 
   if (!stats) return null;
