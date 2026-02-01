@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { WelcomeHeader } from '@/components/dashboard/welcome-header';
-import { RecentChats } from '@/components/dashboard/recent-chats';
 import {
   ClipboardCheck,
   FileText,
@@ -11,7 +10,6 @@ import {
   BarChart3,
   MessageSquare,
   ArrowRight,
-  Shield,
 } from 'lucide-react';
 
 const features = [
@@ -70,24 +68,6 @@ export default function HomePage() {
     <div className="space-y-8">
       <WelcomeHeader />
 
-      <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="flex items-start gap-4 pt-6">
-          <Shield className="h-8 w-8 text-primary mt-0.5 shrink-0" />
-          <div>
-            <h2 className="text-lg font-semibold">
-              Magazijn op Maat — uw complete platform voor magazijnoptimalisatie
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Dit portaal brengt alles samen wat u nodig heeft voor een veilig, efficiënt en compliant
-              magazijn. Uw consultant voert een uitgebreide QuickScan uit en vertaalt de resultaten
-              naar concrete bevindingen, prioriteiten en een routekaart. Via het portaal volgt u de
-              voortgang van acties, beheert u documenten en certificaten, vergelijkt u uw scores met
-              andere organisaties en krijgt u direct antwoord op vragen via de AI-assistent.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature) => (
           <Card key={feature.title} className="flex flex-col">
@@ -109,8 +89,6 @@ export default function HomePage() {
           </Card>
         ))}
       </div>
-
-      <RecentChats />
     </div>
   );
 }

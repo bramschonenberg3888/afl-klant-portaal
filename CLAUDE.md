@@ -37,8 +37,9 @@ src/
 │   ├── products/               # Product grid, cards, recommendations, quotes
 │   ├── benchmark/              # Comparison, distribution, not-available
 │   ├── chat/                   # Chat interface, messages, related questions
-│   ├── dashboard/              # Dashboard widgets
+│   ├── dashboard/              # Dashboard widgets, welcome header
 │   ├── admin/                  # Admin components
+│   ├── skeletons/              # Loading skeleton components
 │   ├── layout/                 # Header, nav, org switcher
 │   ├── auth/                   # Login form
 │   └── settings/               # Profile form
@@ -51,7 +52,7 @@ src/
 │   └── vector/                 # pgvector integration
 ├── trpc/
 │   ├── init.ts                 # Context, middleware chain (auth → org → admin)
-│   ├── routers/                # 10 domain routers
+│   ├── routers/                # 12 domain routers
 │   │   ├── _app.ts             # Root router
 │   │   ├── quickscan.ts        # QuickScan CRUD, priority scores, management summary
 │   │   ├── actions.ts          # Action management + kanban
@@ -62,7 +63,8 @@ src/
 │   │   ├── organizations.ts    # Multi-tenancy
 │   │   ├── chat.ts             # Chat history
 │   │   ├── documents.ts        # RAG knowledge base docs
-│   │   └── admin.ts            # Admin procedures
+│   │   ├── admin.ts            # Admin procedures
+│   │   └── audit.ts            # Audit logging
 │   ├── client.tsx              # Client provider
 │   └── server.tsx              # Server-side caller
 ├── hooks/                      # Custom React hooks

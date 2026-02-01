@@ -350,7 +350,44 @@ async function main() {
   // --- Published scan (current, 30 days ago) ---
   const publishedScan = await prisma.quickScan.upsert({
     where: { id: 'seed-scan-published' },
-    update: {},
+    update: {
+      summary:
+        'Het magazijn scoort voldoende op efficiëntie maar er zijn serieuze veiligheidstekortkomingen geconstateerd, met name bij stellinginrichting en vloermarkering. Directe actie is nodig op het gebied van aanrijdbeveiliging en BHV-procedures.',
+      managementSummary: `Management Samenvatting — QuickScan Q4 2025
+
+Geachte directie,
+
+Op basis van de QuickScan uitgevoerd op ${new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })} door consultant Jan de Vries presenteren wij de belangrijkste bevindingen en aanbevelingen voor Demo Bedrijf B.V.
+
+OVERALL BEOORDELING
+Het magazijn scoort ORANJE op efficiëntie en ROOD op veiligheid. Dit betekent dat er op korte termijn actie nodig is om aan de wettelijke eisen te voldoen en de veiligheid van medewerkers te waarborgen.
+
+KRITIEKE BEVINDINGEN (directe actie vereist)
+1. Aanrijdbeveiliging stellingen — Bij 12 van de 30 stellingrijen ontbreekt aanrijdbeveiliging. Er is zichtbare aanrijdschade geconstateerd. Dit vormt een direct risico voor instorting.
+2. RI&E verlopen — De Risico-Inventarisatie en -Evaluatie is meer dan 3 jaar oud en niet geactualiseerd na de verbouwing. Dit is een overtreding van de Arbowet (artikel 5).
+3. BHV-certificaten verlopen — Van de 5 BHV-ers hebben er 3 een verlopen certificaat. De wettelijke minimumbezetting is niet gegarandeerd.
+4. Nooduitgang geblokkeerd — De nooduitgang aan de zuidzijde wordt regelmatig geblokkeerd door geplaatste pallets.
+
+POSITIEVE PUNTEN
+• Pick- en packprocessen zijn goed gestandaardiseerd (GROEN) met een foutpercentage van slechts 0,3%.
+• WMS-integratie functioneert uitstekend met realtime voorraadinzicht.
+• Dagelijkse afstemming tussen expeditie en productie werkt goed.
+
+AANBEVOLEN ROUTEKAART
+Quick wins (< 1 week): Nooduitgangen vrijmaken, veiligheidsoverleg opstarten.
+30 dagen: Vloermarkeringen vernieuwen, aanrijdbeveiliging installeren, BHV-cursussen plannen.
+60 dagen: RI&E actualiseren, incidentmeldsysteem digitaliseren, ABC-analyse uitvoeren.
+90 dagen: Weekplanning implementeren op basis van orderprognoses.
+
+FINANCIËLE INDICATIE
+De geschatte investering voor de urgente maatregelen (aanrijdbeveiliging, vloermarkering, RI&E en BHV) bedraagt circa €15.000 - €25.000. Dit bedrag staat in verhouding tot de mogelijke boetes bij inspectie (tot €13.500 per overtreding) en het voorkomen van aansprakelijkheid bij ongevallen.
+
+Wij adviseren om de items met prioriteit URGENT en HOOG binnen 30 dagen op te pakken. Uw consultant Jan de Vries staat klaar om u hierbij te begeleiden.
+
+Met vriendelijke groet,
+Jan de Vries
+Consultant Magazijnveiligheid — Logistiekconcurrent`,
+    },
     create: {
       id: 'seed-scan-published',
       organizationId: demoOrg.id,
@@ -1171,7 +1208,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: '690000460',
       category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-l-profiel-400mm.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/6/9/690000460-2.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-l-profiel-400-mm-hoog',
       priceRange: '€15 - €25',
     },
@@ -1183,7 +1220,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: '690000466',
       category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-l-profiel-swing-430mm.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/4/2/422f3093.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-l-profiel-swing-430-mm-hoog',
       priceRange: '€30 - €45',
     },
@@ -1195,7 +1232,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-SB-150',
       category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-kunststof-verstelbaar.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/6/9/695000025_1.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-o150-verstelbare-balk-550mm-breedte-naar-keuze',
       priceRange: '€149 - €249',
     },
@@ -1207,7 +1244,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-VMT-GZ',
       category: 'Markering & Signalering',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/v/l/vloermarkeringstape-geel-zwart.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/m/a/markeringstape_zwart_geel_1.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/vloermarkeringstape-50mm-x-33-meter-geel-zwart',
       priceRange: '€8 - €15',
     },
@@ -1219,7 +1256,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-VMT-G',
       category: 'Markering & Signalering',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/v/l/vloermarkeringstape-geel.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/3/0/300404003_-_vloermarkeringstape_geel_1.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/vloermarkeringstape-50-mm-x-33-meter-geel',
       priceRange: '€6 - €12',
     },
@@ -1231,7 +1268,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-BS-360-800',
       category: 'Veiligheidsspiegels',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/b/o/bolspiegel-360-4-wegen-800mm.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/6/9/690000720.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/bolspiegel-360-4-wegen-magazijnspiegel-800-mm',
       priceRange: '€89 - €139',
     },
@@ -1243,7 +1280,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-BSL-96V',
       category: 'Heftruckveiligheid',
       layer: 'WERKWIJZE_PROCESSEN',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/b/l/blue-safety-heftruck-licht.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/2/0/201502005.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/blue-safety-heftruck-licht-9-96v',
       priceRange: '€35 - €59',
     },
@@ -1255,7 +1292,7 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
       sku: 'LC-KOZ-HT',
       category: 'Heftruckveiligheid',
       layer: 'WERKWIJZE_PROCESSEN',
-      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/k/e/keep-out-zone-licht-heftruck.jpg',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/cache/186ac57e52cb3cb5c3fa785bfe79c4c9/2/0/201502007-2.jpg',
       productUrl: 'https://www.logistiekconcurrent.nl/keep-out-zone-licht-heftruck',
       priceRange: '€59 - €99',
     },
@@ -1292,6 +1329,8 @@ Consultant Magazijnveiligheid — Logistiekconcurrent`,
         name: p.name,
         description: p.description,
         category: p.category,
+        imageUrl: p.imageUrl,
+        productUrl: p.productUrl,
       },
       create: {
         id: p.id,

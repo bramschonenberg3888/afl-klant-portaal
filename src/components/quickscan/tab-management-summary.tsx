@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,30 @@ interface TabManagementSummaryProps {
   scan: QuickScanData;
 }
 
+/** Parse plain-text summary into sections based on ALL-CAPS headings. */
+function parseSections(text: string): { heading: string | null; body: string }[] {
+  const lines = text.split('\n');
+  const sections: { heading: string | null; body: string }[] = [];
+  let current: { heading: string | null; lines: string[] } = { heading: null, lines: [] };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Detect ALL-CAPS section headings (at least 3 word chars, may contain parentheses)
+    if (trimmed.length > 0 && /^[A-ZÀÁÂÃÄÉÈÊËÏÍÎÓÔÕÖÚÙÛÜÇÑ\s&\-()]+$/.test(trimmed) && trimmed.length >= 8) {
+      if (current.heading !== null || current.lines.some((l) => l.trim())) {
+        sections.push({ heading: current.heading, body: current.lines.join('\n').trim() });
+      }
+      current = { heading: trimmed, lines: [] };
+    } else {
+      current.lines.push(line);
+    }
+  }
+  if (current.heading !== null || current.lines.some((l) => l.trim())) {
+    sections.push({ heading: current.heading, body: current.lines.join('\n').trim() });
+  }
+  return sections;
+}
+
 export function TabManagementSummary({ scan }: TabManagementSummaryProps) {
   const { data: session } = useSession();
   const isAdmin =
@@ -23,6 +47,11 @@ export function TabManagementSummary({ scan }: TabManagementSummaryProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(scan.managementSummary ?? '');
   const utils = trpc.useUtils();
+
+  const sections = useMemo(
+    () => (scan.managementSummary ? parseSections(scan.managementSummary) : []),
+    [scan.managementSummary],
+  );
 
   const updateSummary = trpc.quickscan.updateManagementSummary.useMutation({
     onSuccess: () => {
@@ -69,7 +98,7 @@ export function TabManagementSummary({ scan }: TabManagementSummaryProps) {
             <Textarea
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              rows={10}
+              rows={16}
               placeholder="Schrijf een management samenvatting..."
             />
             <div className="flex gap-2">
@@ -83,9 +112,20 @@ export function TabManagementSummary({ scan }: TabManagementSummaryProps) {
               </Button>
             </div>
           </div>
-        ) : scan.managementSummary ? (
-          <div className="prose prose-sm max-w-none">
-            <p className="whitespace-pre-wrap text-sm">{scan.managementSummary}</p>
+        ) : sections.length > 0 ? (
+          <div className="space-y-5">
+            {sections.map((section, i) => (
+              <div key={i}>
+                {section.heading && (
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-2">
+                    {section.heading}
+                  </h3>
+                )}
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                  {section.body}
+                </p>
+              </div>
+            ))}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
