@@ -42,3 +42,8 @@ next-env.d.ts
 
 /src/generated/prisma
 .env*.local
+
+# Planning/briefing docs
+magazijn_op_maat_*.md
+portal_feature_expansion.md
+*.md:Zone.Identifier

@@ -17,7 +17,7 @@ const features = [
     icon: ClipboardCheck,
     title: 'QuickScan',
     description:
-      'Uitgebreide veiligheidsscan van uw magazijn met bevindingen, prioriteiten en een routekaart voor verbetering.',
+      'Het hart van de portal. Hier vindt u de volledige resultaten van uw magazijnbeoordeling: de 3x2 scorematrix, bevindingen met foto\u2019s, een prioriteitenmatrix, een verbeterroutekaart en een actieoverzicht om verbeteringen bij te houden.',
     href: '/quick-scan',
     cta: 'Naar QuickScan',
   },
@@ -25,7 +25,7 @@ const features = [
     icon: FileText,
     title: 'Documenten',
     description:
-      'Beheer uw veiligheidsdocumenten, certificaten en compliance-documenten op één centrale plek.',
+      'Uw centrale plek voor alle relevante documenten: van het QuickScan-rapport en compliance-documenten tot werkinstructies en certificaten. Met meldingen wanneer documenten verlopen.',
     href: '/documents',
     cta: 'Naar documenten',
   },
@@ -33,7 +33,7 @@ const features = [
     icon: ClipboardList,
     title: 'Evaluaties',
     description:
-      'Vul tussentijdse evaluaties in die door uw consultant zijn klaargezet en volg uw voortgang.',
+      'Tussentijdse voortgangsevaluaties die door uw consultant worden klaargezet. Hiermee meet u hoe uw magazijn zich ontwikkelt sinds de laatste scan.',
     href: '/self-assessment',
     cta: 'Naar evaluaties',
   },
@@ -41,7 +41,7 @@ const features = [
     icon: Package,
     title: 'Producten',
     description:
-      'Ontdek veiligheidsproducten en ontvang aanbevelingen op basis van uw QuickScan resultaten.',
+      'Een overzicht van veiligheids- en magazijnproducten die aansluiten bij de bevindingen uit uw QuickScan. Denk aan aanrijdbeveiliging, vloermarkering, stellingen en meer. Direct een offerte aanvragen kan hier.',
     href: '/products',
     cta: 'Naar producten',
   },
@@ -49,7 +49,7 @@ const features = [
     icon: BarChart3,
     title: 'Benchmark',
     description:
-      'Vergelijk uw veiligheidsprestaties met andere organisaties en ontdek verbeterkansen.',
+      'Vergelijk uw scores met die van andere organisaties. Zo ziet u waar u staat ten opzichte van vergelijkbare magazijnen en waar de grootste verbeterkansen liggen.',
     href: '/benchmark',
     cta: 'Naar benchmark',
   },
@@ -57,7 +57,7 @@ const features = [
     icon: MessageSquare,
     title: 'Veiligheidsassistent',
     description:
-      'Stel vragen over magazijnveiligheid en krijg direct antwoord op basis van actuele regelgeving.',
+      'Een AI-gestuurde chatbot die uw vragen over magazijnveiligheid beantwoordt. Op basis van actuele regelgeving en best practices krijgt u direct antwoord op uw vragen.',
     href: '/chat',
     cta: 'Start een gesprek',
   },
@@ -67,6 +67,12 @@ export default function HomePage() {
   return (
     <div className="space-y-8">
       <WelcomeHeader />
+
+      <div>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+          Wat vindt u in deze portal?
+        </h2>
+      </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature) => (

@@ -48,6 +48,7 @@ src/
 │   ├── db.ts                   # Prisma client singleton
 │   ├── utils.ts                # Utility functions (cn)
 │   ├── ai/                     # AI/LLM (prompts, RAG pipeline)
+│   ├── pdf/                    # PDF export (QuickScan report)
 │   ├── scraper/                # Web scraping (firecrawl, ingest)
 │   └── vector/                 # pgvector integration
 ├── trpc/
@@ -72,8 +73,8 @@ src/
 ├── env.ts                      # Environment validation (Zod)
 └── generated/prisma/           # Prisma generated client (DO NOT EDIT)
 
-prisma/                         # Schema & seed (25+ models)
-scripts/                        # Data ingestion scripts
+prisma/                         # Schema & seed (29 models)
+scripts/                        # Data ingestion & RAG seeding scripts
 __tests__/                      # Unit tests (Vitest)
 tests/                          # E2E tests (Playwright)
 ```
