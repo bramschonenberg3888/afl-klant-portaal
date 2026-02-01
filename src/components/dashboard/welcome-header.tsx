@@ -10,7 +10,9 @@ export function WelcomeHeader() {
     <div className="space-y-1">
       <h1 className="text-2xl font-bold tracking-tight">Welkom terug, {firstName}</h1>
       <p className="text-muted-foreground">
-        Bekijk uw veiligheidsstatistieken en recent gestelde vragen.
+        Welkom bij Magazijn op Maat — het portaal van Logistiekconcurrent waar u werkt aan een
+        veiliger, efficiënter en volledig compliant magazijn. Van QuickScan-resultaten en actieplannen
+        tot documentbeheer, benchmarking en persoonlijk advies van uw consultant.
       </p>
     </div>
   );

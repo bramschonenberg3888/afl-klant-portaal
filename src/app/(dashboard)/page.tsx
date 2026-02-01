@@ -3,134 +3,114 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { WelcomeHeader } from '@/components/dashboard/welcome-header';
 import { RecentChats } from '@/components/dashboard/recent-chats';
-import { ShortcutButtons } from '@/components/dashboard/shortcut-buttons';
 import {
-  MessageSquare,
-  Shield,
+  ClipboardCheck,
   FileText,
-  AlertTriangle,
-  CheckCircle,
+  ClipboardList,
+  Package,
+  BarChart3,
+  MessageSquare,
   ArrowRight,
+  Shield,
 } from 'lucide-react';
+
+const features = [
+  {
+    icon: ClipboardCheck,
+    title: 'QuickScan',
+    description:
+      'Uitgebreide veiligheidsscan van uw magazijn met bevindingen, prioriteiten en een routekaart voor verbetering.',
+    href: '/quick-scan',
+    cta: 'Naar QuickScan',
+  },
+  {
+    icon: FileText,
+    title: 'Documenten',
+    description:
+      'Beheer uw veiligheidsdocumenten, certificaten en compliance-documenten op één centrale plek.',
+    href: '/documents',
+    cta: 'Naar documenten',
+  },
+  {
+    icon: ClipboardList,
+    title: 'Evaluaties',
+    description:
+      'Vul tussentijdse evaluaties in die door uw consultant zijn klaargezet en volg uw voortgang.',
+    href: '/self-assessment',
+    cta: 'Naar evaluaties',
+  },
+  {
+    icon: Package,
+    title: 'Producten',
+    description:
+      'Ontdek veiligheidsproducten en ontvang aanbevelingen op basis van uw QuickScan resultaten.',
+    href: '/products',
+    cta: 'Naar producten',
+  },
+  {
+    icon: BarChart3,
+    title: 'Benchmark',
+    description:
+      'Vergelijk uw veiligheidsprestaties met andere organisaties en ontdek verbeterkansen.',
+    href: '/benchmark',
+    cta: 'Naar benchmark',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Veiligheidsassistent',
+    description:
+      'Stel vragen over magazijnveiligheid en krijg direct antwoord op basis van actuele regelgeving.',
+    href: '/chat',
+    cta: 'Start een gesprek',
+  },
+];
 
 export default function HomePage() {
   return (
     <div className="space-y-8">
       <WelcomeHeader />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-primary" />
-              <CardTitle>Veiligheidsassistent</CardTitle>
-            </div>
-            <CardDescription>
-              Stel vragen over magazijnveiligheid en krijg direct antwoord op basis van actuele
-              regelgeving.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground mb-4">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                RI&E en arbobeleid vragen
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Stellingkeuringen en certificering
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Heftruck- en BHV-eisen
-              </li>
-            </ul>
-            <Button asChild>
-              <Link href="/chat">
-                Start een gesprek
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
-              <CardTitle>Arbobesluit 2026</CardTitle>
-            </div>
-            <CardDescription>
-              Vanaf 2026 wordt er strenger gehandhaafd op magazijnveiligheid. Bereid u voor.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-sm text-muted-foreground mb-4">
-              <li className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-primary" />
-                Strengere keuringsplicht voor stellingen
-              </li>
-              <li className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-primary" />
-                Hogere boetes bij overtredingen
-              </li>
-              <li className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-primary" />
-                Uitgebreidere documentatie-eisen
-              </li>
-            </ul>
-            <Button variant="outline" asChild>
-              <Link href="/chat?topic=arbobesluit">
-                Meer informatie
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <RecentChats />
-        <ShortcutButtons />
-      </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <CardTitle>Kennisbank</CardTitle>
-          </div>
-          <CardDescription>Onze AI-assistent is getraind op de volgende bronnen:</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">Arbobesluit</h4>
-              <p className="text-xs text-muted-foreground">Officiële wetgeving</p>
-            </div>
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">NEN-normen</h4>
-              <p className="text-xs text-muted-foreground">Stellingkeuringen</p>
-            </div>
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">Inspectie SZW</h4>
-              <p className="text-xs text-muted-foreground">Handhavingsrichtlijnen</p>
-            </div>
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">RI&E Richtlijnen</h4>
-              <p className="text-xs text-muted-foreground">Risico-inventarisatie</p>
-            </div>
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">BHV Eisen</h4>
-              <p className="text-xs text-muted-foreground">Bedrijfshulpverlening</p>
-            </div>
-            <div className="rounded-lg border p-3">
-              <h4 className="font-medium text-sm">Heftruck Certificering</h4>
-              <p className="text-xs text-muted-foreground">Opleidingseisen</p>
-            </div>
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="flex items-start gap-4 pt-6">
+          <Shield className="h-8 w-8 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h2 className="text-lg font-semibold">
+              Magazijn op Maat — uw complete platform voor magazijnoptimalisatie
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Dit portaal brengt alles samen wat u nodig heeft voor een veilig, efficiënt en compliant
+              magazijn. Uw consultant voert een uitgebreide QuickScan uit en vertaalt de resultaten
+              naar concrete bevindingen, prioriteiten en een routekaart. Via het portaal volgt u de
+              voortgang van acties, beheert u documenten en certificaten, vergelijkt u uw scores met
+              andere organisaties en krijgt u direct antwoord op vragen via de AI-assistent.
+            </p>
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {features.map((feature) => (
+          <Card key={feature.title} className="flex flex-col">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <feature.icon className="h-5 w-5 text-primary" />
+                <CardTitle>{feature.title}</CardTitle>
+              </div>
+              <CardDescription>{feature.description}</CardDescription>
+            </CardHeader>
+            <CardContent className="mt-auto">
+              <Button variant="outline" className="w-full" asChild>
+                <Link href={feature.href}>
+                  {feature.cta}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <RecentChats />
     </div>
   );
 }

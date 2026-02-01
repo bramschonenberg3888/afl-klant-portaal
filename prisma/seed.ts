@@ -363,6 +363,40 @@ async function main() {
       overallSafety: 'ROOD',
       summary:
         'Het magazijn scoort voldoende op efficiëntie maar er zijn serieuze veiligheidstekortkomingen geconstateerd, met name bij stellinginrichting en vloermarkering. Directe actie is nodig op het gebied van aanrijdbeveiliging en BHV-procedures.',
+      managementSummary: `Management Samenvatting — QuickScan Q4 2025
+
+Geachte directie,
+
+Op basis van de QuickScan uitgevoerd op ${new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })} door consultant Jan de Vries presenteren wij de belangrijkste bevindingen en aanbevelingen voor Demo Bedrijf B.V.
+
+OVERALL BEOORDELING
+Het magazijn scoort ORANJE op efficiëntie en ROOD op veiligheid. Dit betekent dat er op korte termijn actie nodig is om aan de wettelijke eisen te voldoen en de veiligheid van medewerkers te waarborgen.
+
+KRITIEKE BEVINDINGEN (directe actie vereist)
+1. Aanrijdbeveiliging stellingen — Bij 12 van de 30 stellingrijen ontbreekt aanrijdbeveiliging. Er is zichtbare aanrijdschade geconstateerd. Dit vormt een direct risico voor instorting.
+2. RI&E verlopen — De Risico-Inventarisatie en -Evaluatie is meer dan 3 jaar oud en niet geactualiseerd na de verbouwing. Dit is een overtreding van de Arbowet (artikel 5).
+3. BHV-certificaten verlopen — Van de 5 BHV-ers hebben er 3 een verlopen certificaat. De wettelijke minimumbezetting is niet gegarandeerd.
+4. Nooduitgang geblokkeerd — De nooduitgang aan de zuidzijde wordt regelmatig geblokkeerd door geplaatste pallets.
+
+POSITIEVE PUNTEN
+• Pick- en packprocessen zijn goed gestandaardiseerd (GROEN) met een foutpercentage van slechts 0,3%.
+• WMS-integratie functioneert uitstekend met realtime voorraadinzicht.
+• Dagelijkse afstemming tussen expeditie en productie werkt goed.
+
+AANBEVOLEN ROUTEKAART
+Quick wins (< 1 week): Nooduitgangen vrijmaken, veiligheidsoverleg opstarten.
+30 dagen: Vloermarkeringen vernieuwen, aanrijdbeveiliging installeren, BHV-cursussen plannen.
+60 dagen: RI&E actualiseren, incidentmeldsysteem digitaliseren, ABC-analyse uitvoeren.
+90 dagen: Weekplanning implementeren op basis van orderprognoses.
+
+FINANCIËLE INDICATIE
+De geschatte investering voor de urgente maatregelen (aanrijdbeveiliging, vloermarkering, RI&E en BHV) bedraagt circa €15.000 - €25.000. Dit bedrag staat in verhouding tot de mogelijke boetes bij inspectie (tot €13.500 per overtreding) en het voorkomen van aansprakelijkheid bij ongevallen.
+
+Wij adviseren om de items met prioriteit URGENT en HOOG binnen 30 dagen op te pakken. Uw consultant Jan de Vries staat klaar om u hierbij te begeleiden.
+
+Met vriendelijke groet,
+Jan de Vries
+Consultant Magazijnveiligheid — Logistiekconcurrent`,
     },
   });
 
@@ -1131,122 +1165,122 @@ async function main() {
   }> = [
     {
       id: 'seed-product-1',
-      name: 'Kolombeschermer Heavy Duty',
+      name: 'Stellingbescherming L-profiel 400 mm',
       description:
-        'Stalen kolombeschermer voor palletstellingen. Absorbeert botsingsenergie tot 10 kJ. Geel gecoat, inclusief bevestigingsmateriaal.',
-      sku: 'LC-KB-HD-001',
+        'Stalen hoekbeschermer met L-profiel (400x160x160x5 mm) en kunststof coating in geel/zwart. Absorbeert botsingen en minimaliseert aanrijdschade aan stellingen. Montage met 4 ankers.',
+      sku: '690000460',
       category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: '/placeholder/product-kolombeschermer.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/kolombeschermer-heavy-duty',
-      priceRange: '€89 - €129',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-l-profiel-400mm.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-l-profiel-400-mm-hoog',
+      priceRange: '€15 - €25',
     },
     {
       id: 'seed-product-2',
-      name: 'Kopbeveiliging Stelling',
+      name: 'Stellingbescherming L-profiel Swing 430 mm',
       description:
-        'U-vormige kopbeveiliging voor stellingrijen. Beschermt tegen aanrijding door heftrucks. Verzinkt staal.',
-      sku: 'LC-KB-KS-002',
+        'Stellingbescherming met L-profiel en polyurethaan veerelement (Swing). Absorbeert botsingsenergie en beschermt tevens de magazijnvloer. Hoogwaardig staal met kunststof coating.',
+      sku: '690000466',
       category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: '/placeholder/product-kopbeveiliging.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/kopbeveiliging-stelling',
-      priceRange: '€149 - €199',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-l-profiel-swing-430mm.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-l-profiel-swing-430-mm-hoog',
+      priceRange: '€30 - €45',
     },
     {
       id: 'seed-product-3',
-      name: 'Vloermarkeringstape Slijtvast',
+      name: 'Stellingbescherming Kunststof Ø150 Verstelbare Balk',
       description:
-        'Industriële vloermarkeringstape, 50mm breed. Bestand tegen heftruckverkeer. Beschikbaar in geel, rood en groen.',
-      sku: 'LC-VM-SV-003',
-      category: 'Markering & Signalering',
+        'Kunststof aanrijdbeveiliging met verstelbare balk. Beweegt mee bij impact — geen vervanging of reparatie nodig na aanrijding. Beschermt stelling, voertuig en persoon.',
+      sku: 'LC-SB-150',
+      category: 'Aanrijdbeveiliging',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: '/placeholder/product-vloermarkering.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/vloermarkeringstape',
-      priceRange: '€24 - €39',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/s/t/stellingbescherming-kunststof-verstelbaar.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/stellingbescherming-o150-verstelbare-balk-550mm-breedte-naar-keuze',
+      priceRange: '€149 - €249',
     },
     {
       id: 'seed-product-4',
-      name: 'Hekwerk Voetgangersscheiding',
+      name: 'Vloermarkeringstape Geel/Zwart 50 mm x 33 m',
       description:
-        'Modulair hekwerksysteem voor scheiding van voetgangers- en heftruckverkeer. Per sectie van 2 meter.',
-      sku: 'LC-HW-VS-004',
-      category: 'Verkeersgeleiding',
+        'PVC vloermarkeringstape in waarschuwingskleuren geel/zwart (50 mm breed, 33 meter). Sterke rubber plaklaag, geschikt voor magazijnen en orderpickstraten. Voldoet aan EU-regels 2000/53 EC.',
+      sku: 'LC-VMT-GZ',
+      category: 'Markering & Signalering',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: '/placeholder/product-hekwerk.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/hekwerk-voetgangersscheiding',
-      priceRange: '€189 - €259',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/v/l/vloermarkeringstape-geel-zwart.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/vloermarkeringstape-50mm-x-33-meter-geel-zwart',
+      priceRange: '€8 - €15',
     },
     {
       id: 'seed-product-5',
-      name: 'Nooduitgang Signaleringspakket',
+      name: 'Vloermarkeringstape Geel 50 mm x 33 m',
       description:
-        'Compleet pakket met verlichte nooduitgangborden, vluchtrouteborden en fotoluminescente vloermarkering.',
-      sku: 'LC-NS-NP-005',
-      category: 'Noodvoorzieningen',
+        'Gele PVC vloermarkeringstape (50 mm breed, 33 meter) voor markering van looppaden, rijroutes en opslagzones in magazijnen. Slijtvast en geschikt voor heftruckverkeer.',
+      sku: 'LC-VMT-G',
+      category: 'Markering & Signalering',
       layer: 'RUIMTE_INRICHTING',
-      imageUrl: '/placeholder/product-nooduitgang.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/nooduitgang-signaleringspakket',
-      priceRange: '€349 - €499',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/v/l/vloermarkeringstape-geel.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/vloermarkeringstape-50-mm-x-33-meter-geel',
+      priceRange: '€6 - €12',
     },
     {
       id: 'seed-product-6',
-      name: 'PBM Startpakket Magazijn',
+      name: 'Bolspiegel 360° 4-wegen Magazijnspiegel Ø800 mm',
       description:
-        'Compleet PBM-pakket: veiligheidsschoenen S3, werkhandschoenen, veiligheidsbril en gehoorbescherming.',
-      sku: 'LC-PBM-SP-006',
-      category: 'Persoonlijke Bescherming',
-      layer: 'WERKWIJZE_PROCESSEN',
-      imageUrl: '/placeholder/product-pbm.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/pbm-startpakket',
-      priceRange: '€79 - €119',
+        'Panorama bolspiegel met 360° zicht en 12 meter kijkafstand. Verhoogt de veiligheid op kruispunten en in gangpaden. Impact-bestendig kunststof, geschikt voor binnen- en buitengebruik.',
+      sku: 'LC-BS-360-800',
+      category: 'Veiligheidsspiegels',
+      layer: 'RUIMTE_INRICHTING',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/b/o/bolspiegel-360-4-wegen-800mm.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/bolspiegel-360-4-wegen-magazijnspiegel-800-mm',
+      priceRange: '€89 - €139',
     },
     {
       id: 'seed-product-7',
-      name: 'Digitaal Incidentmeldsysteem',
+      name: 'Blue Safety Heftruck Licht 9-96V',
       description:
-        'SaaS-platform voor registratie van incidenten en bijna-ongevallen. Inclusief QR-codes, app en dashboard.',
-      sku: 'LC-DI-MS-007',
-      category: 'Software & Systemen',
+        'Blauw LED-waarschuwingslicht voor heftrucks. Projecteert een blauwe stip op de vloer om naderende heftrucks te signaleren. Geschikt voor kruispunten en gangpaden. 9-96V breed voltage.',
+      sku: 'LC-BSL-96V',
+      category: 'Heftruckveiligheid',
       layer: 'WERKWIJZE_PROCESSEN',
-      imageUrl: '/placeholder/product-incidentsysteem.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/incidentmeldsysteem',
-      priceRange: '€199/maand',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/b/l/blue-safety-heftruck-licht.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/blue-safety-heftruck-licht-9-96v',
+      priceRange: '€35 - €59',
     },
     {
       id: 'seed-product-8',
-      name: 'Voice Picking Systeem',
+      name: 'Keep Out Zone Licht Heftruck',
       description:
-        'Handsfree orderpicking met spraakgestuurde instructies. Compatibel met gangbare WMS-systemen.',
-      sku: 'LC-VP-SY-008',
-      category: 'Technologie',
+        'Projecteert een rode waarschuwingszone rondom de heftruck op de vloer. Voetgangers en andere weggebruikers zien direct de werkruimte van de heftruck. Voorkomt actief botsingen.',
+      sku: 'LC-KOZ-HT',
+      category: 'Heftruckveiligheid',
       layer: 'WERKWIJZE_PROCESSEN',
-      imageUrl: '/placeholder/product-voicepicking.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/voice-picking',
-      priceRange: '€2.500 - €4.500',
+      imageUrl: 'https://www.logistiekconcurrent.nl/media/catalog/product/k/e/keep-out-zone-licht-heftruck.jpg',
+      productUrl: 'https://www.logistiekconcurrent.nl/keep-out-zone-licht-heftruck',
+      priceRange: '€59 - €99',
     },
     {
       id: 'seed-product-9',
       name: 'BHV Training Pakket',
       description:
-        'Complete BHV-training inclusief EHBO, brandbestrijding en ontruiming. Inclusief herhalingscursus na 1 jaar.',
+        'Complete BHV-training inclusief EHBO, brandbestrijding en ontruiming. Inclusief herhalingscursus na 1 jaar. Gecertificeerde opleiding conform Arbowet.',
       sku: 'LC-BHV-TP-009',
       category: 'Opleidingen',
       layer: 'ORGANISATIE_BESTURING',
       imageUrl: '/placeholder/product-bhv.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/bhv-training',
+      productUrl: 'https://www.logistiekconcurrent.nl/pbm-en-veiligheid',
       priceRange: '€295 - €395',
     },
     {
       id: 'seed-product-10',
       name: 'RI&E Uitvoering Compleet',
       description:
-        'Volledige Risico-Inventarisatie en -Evaluatie door gecertificeerde arbodienst. Inclusief plan van aanpak.',
+        'Volledige Risico-Inventarisatie en -Evaluatie door gecertificeerde arbodienst. Inclusief plan van aanpak en toetsing. Conform Arbowet artikel 5.',
       sku: 'LC-RIE-UC-010',
       category: 'Advies & Diensten',
       layer: 'ORGANISATIE_BESTURING',
       imageUrl: '/placeholder/product-rie.jpg',
-      productUrl: 'https://logistiekconcurrent.nl/producten/rie-uitvoering',
+      productUrl: 'https://www.logistiekconcurrent.nl/magazijn/magazijninrichting/aanrijdbeveiliging',
       priceRange: '€1.500 - €3.500',
     },
   ];
@@ -1290,25 +1324,25 @@ async function main() {
       findingId: 'seed-finding-5',
       actionId: 'seed-action-1',
       layer: 'RUIMTE_INRICHTING',
-      context: 'Aanbevolen naar aanleiding van ontbrekende aanrijdbeveiliging bij 12 stellingrijen.',
+      context: 'L-profiel stellingbescherming voor de 12 stellingrijen waar aanrijdbeveiliging ontbreekt.',
       sortOrder: 1,
     },
     {
       id: 'seed-rec-2',
-      productId: 'seed-product-2',
+      productId: 'seed-product-3',
       findingId: 'seed-finding-5',
       actionId: 'seed-action-1',
       layer: 'RUIMTE_INRICHTING',
-      context: 'Kopbeveiliging voor dezelfde stellingen waar kolombeschermers nodig zijn.',
+      context: 'Kunststof verstelbare stellingbescherming als alternatief — geen vervanging nodig na impact.',
       sortOrder: 2,
     },
     {
       id: 'seed-rec-3',
-      productId: 'seed-product-3',
+      productId: 'seed-product-4',
       findingId: 'seed-finding-4',
       actionId: 'seed-action-2',
       layer: 'RUIMTE_INRICHTING',
-      context: 'Vervanging van versleten vloermarkeringen in hal A en C.',
+      context: 'Geel/zwarte waarschuwingstape voor vervanging van versleten vloermarkeringen in hal A en C.',
       sortOrder: 1,
     },
     {

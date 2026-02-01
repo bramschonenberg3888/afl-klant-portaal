@@ -15,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Veiligheidsportaal | Logistiekconcurrent',
-  description: 'Magazijnveiligheid en compliance voor Logistiekconcurrent klanten',
+  title: 'Magazijn op Maat | Logistiekconcurrent',
+  description:
+    'Het complete portaal voor magazijnveiligheid, efficiëntie en compliance — door Logistiekconcurrent.',
 };
 
 export default function RootLayout({
