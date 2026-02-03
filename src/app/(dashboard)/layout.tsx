@@ -14,7 +14,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <AuthSessionProvider session={session}>
       <div className="flex min-h-svh flex-col">
         <DashboardHeader />
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto">
+          <div className="mx-auto max-w-7xl px-4 py-4 md:px-6 md:py-6 lg:px-8 lg:py-8">
+            {children}
+          </div>
+        </main>
       </div>
     </AuthSessionProvider>
   );

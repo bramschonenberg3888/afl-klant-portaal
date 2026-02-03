@@ -121,7 +121,8 @@ export function DashboardHeader() {
   });
 
   return (
-    <header className="flex h-24 shrink-0 items-center bg-[#0052CC] px-4 md:px-12">
+    <header className="h-24 shrink-0 bg-[#0052CC]">
+      <div className="mx-auto flex h-full max-w-7xl items-center px-4 md:px-6 lg:px-8">
       {/* Logo */}
       <Link href="/" className="mr-8 shrink-0">
         <Image
@@ -273,6 +274,7 @@ export function DashboardHeader() {
             </div>
           </SheetContent>
         </Sheet>
+      </div>
       </div>
     </header>
   );

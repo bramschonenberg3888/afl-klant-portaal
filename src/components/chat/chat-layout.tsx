@@ -24,7 +24,7 @@ export function ChatLayout({ initialConversationId }: ChatLayoutProps) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-9rem)]">
+    <div className="flex h-full">
       {/* Desktop sidebar */}
       <div className="hidden lg:block w-72 shrink-0 h-full">
         <ConversationList

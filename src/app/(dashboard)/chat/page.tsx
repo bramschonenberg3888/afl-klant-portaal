@@ -7,5 +7,9 @@ export default async function ChatPage({
 }) {
   const params = await searchParams;
 
-  return <ChatLayout initialConversationId={params.id} />;
+  return (
+    <div className="-my-4 md:-my-6 lg:-my-8 h-[calc(100dvh-6rem)]">
+      <ChatLayout initialConversationId={params.id} />
+    </div>
+  );
 }
