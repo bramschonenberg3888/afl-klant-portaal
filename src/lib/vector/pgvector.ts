@@ -1,5 +1,13 @@
 import { db } from '@/lib/db';
 
+function trimToWordBoundary(text: string, maxLength: number): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= maxLength) return trimmed;
+  const cut = trimmed.slice(0, maxLength);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut) + '…';
+}
+
 export interface SimilarChunk {
   id: string;
   content: string;
@@ -7,6 +15,7 @@ export interface SimilarChunk {
   documentTitle: string;
   sourceUrl: string | null;
   similarity: number;
+  snippet: string;
 }
 
 export async function findSimilarChunks(
@@ -56,6 +65,7 @@ export async function findSimilarChunks(
     documentTitle: row.document_title,
     sourceUrl: row.source_url,
     similarity: row.similarity,
+    snippet: trimToWordBoundary(row.content, 150),
   }));
 }
 

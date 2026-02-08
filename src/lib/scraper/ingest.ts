@@ -11,9 +11,36 @@ export interface IngestResult {
   sourceUrl: string;
   chunksCreated: number;
   embeddingsGenerated: number;
+  skipped?: boolean;
+}
+
+function cleanText(text: string): string {
+  return text
+    .replace(/\0/g, '') // strip null bytes
+    .replace(/\uFFFD/g, '') // strip replacement characters
+    .replace(/[ \t]+/g, ' ') // collapse horizontal whitespace
+    .replace(/\n{3,}/g, '\n\n') // collapse excessive newlines
+    .trim();
 }
 
 export async function ingestUrl(url: string): Promise<IngestResult> {
+  // Duplicate detection — skip if a document with this sourceUrl already exists
+  const existing = await db.document.findFirst({
+    where: { sourceUrl: url },
+    select: { id: true, title: true },
+  });
+  if (existing) {
+    console.log(`[ingest] Skipping duplicate URL: ${url} (document ${existing.id})`);
+    return {
+      documentId: existing.id,
+      title: existing.title,
+      sourceUrl: url,
+      chunksCreated: 0,
+      embeddingsGenerated: 0,
+      skipped: true,
+    };
+  }
+
   // Ensure pgvector extension exists
   await ensurePgvectorExtension();
 
@@ -24,8 +51,11 @@ export async function ingestUrl(url: string): Promise<IngestResult> {
 }
 
 export async function ingestContent(content: ScrapeResult): Promise<IngestResult> {
-  // Create MDocument from markdown
-  const doc = MDocument.fromMarkdown(content.markdown);
+  // Clean text before chunking — normalize whitespace, strip broken unicode
+  const cleanedMarkdown = cleanText(content.markdown);
+
+  // Create MDocument from cleaned markdown
+  const doc = MDocument.fromMarkdown(cleanedMarkdown);
 
   // Chunk the document
   const chunks = await doc.chunk({
